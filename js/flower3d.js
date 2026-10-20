@@ -1215,10 +1215,10 @@ class Flower3DEngine {
                 rimHue: 0.78,
                 glowColor: 0x38bdf8,
                 tOffset: 0,
-                speed: 0.55,
-                radiusX: 1.35,
-                radiusZ: 1.25,
-                heightBase: 0.65,
+                speed: 0.52,
+                radiusX: 1.85,
+                radiusZ: 1.70,
+                heightBase: 0.85,
                 heightAmp: 0.35
             }),
             this.createSingleButterfly({
@@ -1227,11 +1227,11 @@ class Flower3DEngine {
                 rimHue: 0.12,
                 glowColor: 0xff69b4,
                 tOffset: Math.PI,
-                speed: 0.48,
-                radiusX: 1.55,
-                radiusZ: 1.45,
-                heightBase: 0.50,
-                heightAmp: 0.42
+                speed: 0.45,
+                radiusX: 2.10,
+                radiusZ: 1.95,
+                heightBase: 0.75,
+                heightAmp: 0.40
             })
         ];
     }
@@ -1751,10 +1751,20 @@ class Flower3DEngine {
                 let targetZ = orbitZ;
 
                 if (this.mouseWorldTarget && b.config.name === 'Morpho Azure') {
-                    targetX = orbitX * 0.65 + this.mouseWorldTarget.x * 0.35;
-                    targetY = orbitY * 0.65 + Math.max(0.15, this.mouseWorldTarget.y) * 0.35;
-                    targetZ = orbitZ * 0.65 + this.mouseWorldTarget.z * 0.35;
+                    targetX = orbitX * 0.75 + this.mouseWorldTarget.x * 0.25;
+                    targetY = orbitY * 0.75 + Math.max(0.35, this.mouseWorldTarget.y) * 0.25;
+                    targetZ = orbitZ * 0.75 + this.mouseWorldTarget.z * 0.25;
                 }
+
+                // Prevent butterflies from flying into or clipping the flower center
+                const distXZ = Math.hypot(targetX, targetZ);
+                const minFlowerRadius = 1.35;
+                if (distXZ < minFlowerRadius) {
+                    const pushFactor = minFlowerRadius / (distXZ || 0.1);
+                    targetX *= pushFactor;
+                    targetZ *= pushFactor;
+                }
+                targetY = Math.max(0.45, targetY);
 
                 b.mesh.position.x += (targetX - b.mesh.position.x) * 0.05;
                 b.mesh.position.y += (targetY - b.mesh.position.y) * 0.05;
