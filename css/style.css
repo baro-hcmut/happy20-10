@@ -153,7 +153,8 @@ body.cinematic-active .cinematic-subtitles {
 #flower-3d-container.visible {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
+    pointer-events: auto !important;
+    z-index: 6;
 }
 
 #flower-3d-container:active {
@@ -469,7 +470,8 @@ body.cinematic-active .cinematic-subtitles {
 .start-screen.hidden {
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
+    pointer-events: none !important;
+    display: none !important;
 }
 
 .start-screen-portal {
@@ -551,6 +553,8 @@ body.cinematic-active .cinematic-subtitles {
 .story-overlay.hidden {
     opacity: 0;
     visibility: hidden;
+    pointer-events: none !important;
+    display: none !important;
 }
 
 .story-scene {
@@ -573,7 +577,8 @@ body.cinematic-active .cinematic-subtitles {
 .story-scene.hidden {
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
+    pointer-events: none !important;
+    display: none !important;
 }
 
 .story-text-center {

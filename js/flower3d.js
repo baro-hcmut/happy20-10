@@ -1502,7 +1502,7 @@ class Flower3DEngine {
             this.pointerStartX = clientX;
             this.pointerStartY = clientY;
 
-            if (Math.hypot(clientX - startClientX, clientY - startClientY) > 5) {
+            if (Math.hypot(clientX - startClientX, clientY - startClientY) > 16) {
                 hasDragged = true;
             }
 
@@ -1514,6 +1514,8 @@ class Flower3DEngine {
         const onEnd = () => {
             this.isPointerDown = false;
         };
+
+        let lastTouchTime = 0;
 
         dom.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY));
         window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
@@ -1531,7 +1533,14 @@ class Flower3DEngine {
             }
         }, { passive: true });
 
-        window.addEventListener('touchend', onEnd);
+        window.addEventListener('touchend', (e) => {
+            this.isPointerDown = false;
+            if (!hasDragged && e.changedTouches && e.changedTouches.length > 0) {
+                lastTouchTime = Date.now();
+                const touch = e.changedTouches[0];
+                handleRaycastInteraction(touch.clientX, touch.clientY);
+            }
+        });
 
         // Zoom with wheel
         dom.addEventListener('wheel', (e) => {
@@ -1550,17 +1559,11 @@ class Flower3DEngine {
             return null;
         };
 
-        // 🌟 Raycasting Click across Petals, Butterflies, Wish Bottle, and Water Sanctuary!
-        dom.addEventListener('click', (e) => {
-            // CRITICAL BUG FIX: If user was dragging / rotating camera, do NOT trigger click action!
-            if (hasDragged) {
-                hasDragged = false;
-                return;
-            }
-
+        // 🌟 Raycasting Interaction across Petals, Butterflies, Wish Bottle, and Water Sanctuary!
+        const handleRaycastInteraction = (clientX, clientY) => {
             const rect = dom.getBoundingClientRect();
-            this.mouseVector.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-            this.mouseVector.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+            this.mouseVector.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+            this.mouseVector.y = -((clientY - rect.top) / rect.height) * 2 + 1;
 
             this.raycaster.setFromCamera(this.mouseVector, this.camera);
             const allTargets = [...this.interactivePetalMeshes, ...this.interactiveObjects];
@@ -1576,7 +1579,7 @@ class Flower3DEngine {
                     if (window.soundEngine) window.soundEngine.playCrystalChime();
                     if (window.openWishBottleModal) window.openWishBottleModal();
                     this.spawn3DPetalFlakes(hit.point, 16);
-                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
+                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(clientX, clientY);
                     return;
                 }
 
@@ -1587,9 +1590,9 @@ class Flower3DEngine {
                         butterflyData.butterflyRef.triggerAcrobaticLoop();
                     }
                     if (window.soundEngine) window.soundEngine.playFairyHarp();
-                    if (window.showToast) window.showToast("🦋 Chú bướm dạ quang gửi tặng bạn muôn điều diệu kỳ!");
+                    if (window.showToast) window.showToast("🦋 Chú bướm dạ quang gửi tặng em muôn điều diệu kỳ!");
                     this.spawn3DPetalFlakes(hit.point, 14);
-                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
+                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(clientX, clientY);
                     return;
                 }
 
@@ -1598,7 +1601,7 @@ class Flower3DEngine {
                 if (waterData) {
                     if (window.soundEngine) window.soundEngine.playWaterDrop();
                     this.spawnWaterRipple(hit.point.x, hit.point.z, 2.2);
-                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
+                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(clientX, clientY);
                     return;
                 }
 
@@ -1619,11 +1622,20 @@ class Flower3DEngine {
                     // Vibration punch on hit petal
                     hitObj.scale.multiplyScalar(1.15);
                     setTimeout(() => hitObj.scale.divideScalar(1.15), 180);
+                    return;
                 }
             } else {
                 if (window.soundEngine) window.soundEngine.playSparkle();
             }
+        };
 
+        dom.addEventListener('click', (e) => {
+            if (Date.now() - lastTouchTime < 450) return;
+            if (hasDragged) {
+                hasDragged = false;
+                return;
+            }
+            handleRaycastInteraction(e.clientX, e.clientY);
             if (window.particleEngine) {
                 window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
             }
