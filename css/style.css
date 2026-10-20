@@ -1,27 +1,29 @@
 /* ==========================================================================
-   🌹 20/10 ENCHANTED TWILIGHT GARDEN - MODERN LUXURY DESIGN SYSTEM
+   🌹 20/10 ENCHANTED TWILIGHT GARDEN - MASTERCLASS LUXURY DESIGN SYSTEM
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,400;1,600&display=swap');
 
 :root {
-    --bg-dark: #07070b;
-    --bg-gradient: radial-gradient(circle at 50% 30%, #170d24 0%, #0c0814 55%, #050408 100%);
+    --bg-dark: #06050a;
+    --bg-gradient: radial-gradient(circle at 50% 30%, #1a0f28 0%, #0d0815 55%, #050308 100%);
     
     --gold-primary: #f5cf7b;
-    --gold-light: #fff0be;
-    --gold-gradient: linear-gradient(135deg, #fff2be 0%, #e8ba5d 50%, #c49332 100%);
+    --gold-light: #fff2c4;
+    --gold-dark: #b88628;
+    --gold-gradient: linear-gradient(135deg, #fff3c9 0%, #e8ba5d 50%, #c49332 100%);
+    --gold-glow: rgba(245, 207, 123, 0.45);
     
     --rose-primary: #ff4d79;
     --rose-light: #ff8fab;
     --rose-dark: #b81d4a;
-    --rose-glow: rgba(255, 77, 121, 0.45);
+    --rose-glow: rgba(255, 77, 121, 0.5);
     
-    --glass-bg: rgba(18, 14, 26, 0.65);
-    --glass-bg-hover: rgba(28, 22, 40, 0.82);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-border-gold: rgba(245, 207, 123, 0.35);
-    --glass-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 77, 121, 0.15);
+    --glass-bg: rgba(18, 14, 26, 0.70);
+    --glass-bg-hover: rgba(28, 20, 42, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --glass-border-gold: rgba(245, 207, 123, 0.4);
+    --glass-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.7), 0 0 28px rgba(255, 77, 121, 0.18);
     
     --font-serif: 'Playfair Display', Georgia, serif;
     --font-script: 'Dancing Script', cursive;
@@ -45,6 +47,18 @@ body, html {
     background-image: var(--bg-gradient);
     font-family: var(--font-body);
     color: #ffffff;
+}
+
+/* --- 🎬 Cinematic Vignette & Ambient Light Overlay --- */
+.cinematic-vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: none;
+    box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.82), inset 0 0 40px rgba(0, 0, 0, 0.5);
 }
 
 /* ==========================================================================
@@ -75,7 +89,7 @@ body, html {
 }
 
 /* ==========================================================================
-   STAGE 1: INTRO CEREMONY (GIFT BOX)
+   STAGE 1: INTRO CEREMONY (LUXURY GIFT BOX)
    ========================================================================== */
 .stage-intro {
     position: fixed;
@@ -89,8 +103,8 @@ body, html {
     justify-content: center;
     align-items: center;
     padding: 24px;
-    background: radial-gradient(circle at center, rgba(16, 10, 24, 0.8) 0%, rgba(5, 3, 8, 0.95) 100%);
-    backdrop-filter: blur(8px);
+    background: radial-gradient(circle at center, rgba(20, 12, 30, 0.82) 0%, rgba(6, 4, 10, 0.96) 100%);
+    backdrop-filter: blur(10px);
     transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
 }
 
@@ -118,47 +132,47 @@ body, html {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 18px;
+    padding: 7px 22px;
     border-radius: 999px;
-    background: rgba(255, 77, 121, 0.12);
-    border: 1px solid rgba(255, 77, 121, 0.35);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 2px;
+    background: rgba(255, 77, 121, 0.15);
+    border: 1px solid rgba(245, 207, 123, 0.45);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     color: var(--gold-light);
-    margin-bottom: 20px;
-    box-shadow: 0 0 15px rgba(255, 77, 121, 0.2);
+    margin-bottom: 22px;
+    box-shadow: 0 0 20px rgba(255, 77, 121, 0.25);
 }
 
 .intro-title {
     font-family: var(--font-serif);
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-size: clamp(2.3rem, 5.2vw, 4.0rem);
     font-weight: 700;
     line-height: 1.2;
-    background: linear-gradient(135deg, #ffffff 0%, #ffe6ee 45%, #f5cf7b 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #ffe4ee 40%, #f5cf7b 85%, #dfa53c 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 12px;
-    text-shadow: 0 0 35px rgba(255, 77, 121, 0.35);
+    text-shadow: 0 0 35px rgba(255, 77, 121, 0.4);
 }
 
 .intro-recipient {
     font-family: var(--font-script);
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(1.9rem, 4.2vw, 3.0rem);
     color: var(--gold-primary);
     margin-bottom: 30px;
-    text-shadow: 0 0 20px rgba(245, 207, 123, 0.5);
+    text-shadow: 0 0 24px rgba(245, 207, 123, 0.6);
 }
 
-/* --- 3D Glowing Floating Gift Box --- */
+/* --- 3D Glowing Luxury Gift Box --- */
 .gift-box-wrapper {
     position: relative;
-    width: 170px;
-    height: 170px;
-    margin: 20px 0 40px;
+    width: 175px;
+    height: 175px;
+    margin: 20px 0 42px;
     perspective: 800px;
-    animation: floatGift 4s ease-in-out infinite;
+    animation: floatGift 4.2s ease-in-out infinite;
 }
 
 @keyframes floatGift {
@@ -171,16 +185,16 @@ body, html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 220px;
-    height: 220px;
+    width: 230px;
+    height: 230px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 77, 121, 0.35) 0%, rgba(245, 207, 123, 0.15) 50%, transparent 70%);
-    animation: pulseAura 3s ease-in-out infinite;
-    filter: blur(10px);
+    background: radial-gradient(circle, rgba(255, 77, 121, 0.4) 0%, rgba(245, 207, 123, 0.2) 50%, transparent 72%);
+    animation: pulseAura 3.2s ease-in-out infinite;
+    filter: blur(12px);
 }
 
 @keyframes pulseAura {
-    0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+    0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.65; }
     50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
 }
 
@@ -188,41 +202,42 @@ body, html {
     position: relative;
     width: 100%;
     height: 100%;
-    background: linear-gradient(145deg, #d82b58 0%, #8b1338 100%);
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 77, 121, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+    background: linear-gradient(145deg, #c41e45 0%, #750d28 100%);
+    border: 1px solid rgba(245, 207, 123, 0.4);
+    border-radius: 26px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.65), 0 0 35px rgba(255, 77, 121, 0.45), inset 0 2px 8px rgba(255, 255, 255, 0.45);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
 }
 
 .gift-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 45px rgba(255, 77, 121, 0.7);
+    transform: scale(1.06);
+    box-shadow: 0 28px 56px rgba(0, 0, 0, 0.75), 0 0 50px rgba(255, 77, 121, 0.75);
 }
 
-/* Ribbons */
+/* Ribbons with metallic sheen */
 .ribbon-vertical {
     position: absolute;
-    width: 32px;
+    width: 34px;
     height: 100%;
     background: var(--gold-gradient);
-    box-shadow: 0 0 12px rgba(245, 207, 123, 0.5);
+    box-shadow: 0 0 14px rgba(245, 207, 123, 0.55), inset 0 0 4px rgba(255, 255, 255, 0.4);
 }
 
 .ribbon-horizontal {
     position: absolute;
-    height: 32px;
+    height: 34px;
     width: 100%;
     background: var(--gold-gradient);
-    box-shadow: 0 0 12px rgba(245, 207, 123, 0.5);
+    box-shadow: 0 0 14px rgba(245, 207, 123, 0.55), inset 0 0 4px rgba(255, 255, 255, 0.4);
 }
 
 .ribbon-bow {
     position: absolute;
-    top: -24px;
+    top: -26px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -231,53 +246,53 @@ body, html {
 }
 
 .bow-loop {
-    width: 38px;
-    height: 28px;
+    width: 40px;
+    height: 30px;
     border: 6px solid #e8ba5d;
-    border-radius: 50% 50% 10% 10%;
+    border-radius: 50% 50% 12% 12%;
     background: var(--gold-gradient);
-    box-shadow: 0 0 10px rgba(245, 207, 123, 0.6);
+    box-shadow: 0 0 12px rgba(245, 207, 123, 0.65);
 }
 
 .bow-loop.left {
-    transform: rotate(-35deg) translateX(8px);
+    transform: rotate(-35deg) translateX(9px);
 }
 
 .bow-loop.right {
-    transform: rotate(35deg) translateX(-8px);
+    transform: rotate(35deg) translateX(-9px);
 }
 
 .bow-center {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     background: var(--gold-primary);
     border-radius: 50%;
     position: absolute;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 4px rgba(255, 255, 255, 0.6);
 }
 
-/* Luxury CTA Button */
+/* Masterclass Luxury Button */
 .btn-open-gift {
     position: relative;
-    padding: 16px 42px;
+    padding: 18px 46px;
     font-family: var(--font-body);
-    font-size: 1.05rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
     color: #1a0815;
     background: var(--gold-gradient);
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(245, 207, 123, 0.4), 0 0 20px rgba(255, 77, 121, 0.3);
+    box-shadow: 0 12px 36px rgba(245, 207, 123, 0.45), 0 0 24px rgba(255, 77, 121, 0.35);
     overflow: hidden;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
 }
 
 .btn-open-gift:hover {
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 15px 40px rgba(245, 207, 123, 0.6), 0 0 35px rgba(255, 77, 121, 0.5);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 18px 48px rgba(245, 207, 123, 0.65), 0 0 40px rgba(255, 77, 121, 0.55);
 }
 
 .btn-open-gift:active {
@@ -289,9 +304,9 @@ body, html {
     position: absolute;
     top: -50%;
     left: -60%;
-    width: 40%;
+    width: 45%;
     height: 200%;
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.5);
     transform: rotate(30deg);
     animation: buttonShine 3.5s infinite;
 }
@@ -302,12 +317,12 @@ body, html {
 }
 
 .intro-hint {
-    margin-top: 18px;
-    font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.6);
+    margin-top: 20px;
+    font-size: 0.90rem;
+    color: rgba(255, 240, 245, 0.75);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 /* ==========================================================================
@@ -337,19 +352,19 @@ body, html {
 
 .celebration-banner {
     text-align: center;
-    padding: 24px 36px;
-    border-radius: 28px;
-    background: rgba(14, 9, 22, 0.75);
+    padding: 28px 42px;
+    border-radius: 30px;
+    background: rgba(14, 9, 22, 0.82);
     border: 1px solid var(--glass-border-gold);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(16px);
     box-shadow: var(--glass-shadow);
     transform: scale(0.9);
-    animation: bannerPop 3s ease forwards;
+    animation: bannerPop 3.2s ease forwards;
 }
 
 @keyframes bannerPop {
     0% { transform: scale(0.8); opacity: 0; }
-    20% { transform: scale(1.05); opacity: 1; }
+    20% { transform: scale(1.06); opacity: 1; }
     30% { transform: scale(1); opacity: 1; }
     80% { transform: scale(1); opacity: 1; }
     100% { transform: scale(0.95); opacity: 0; }
@@ -357,7 +372,7 @@ body, html {
 
 .celebration-banner h2 {
     font-family: var(--font-serif);
-    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-size: clamp(2.2rem, 4.8vw, 3.4rem);
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -366,7 +381,7 @@ body, html {
 
 .celebration-banner p {
     font-family: var(--font-script);
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem);
     color: var(--rose-light);
 }
 
@@ -394,9 +409,9 @@ body, html {
 /* --- Floating Top Bar --- */
 .garden-top-bar {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
+    top: 22px;
+    left: 22px;
+    right: 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -407,17 +422,18 @@ body, html {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 18px;
+    padding: 10px 20px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
     border-radius: 999px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .brand-icon {
-    font-size: 1.2rem;
-    animation: rotateSlow 12s linear infinite;
+    font-size: 1.25rem;
+    animation: rotateSlow 14s linear infinite;
 }
 
 @keyframes rotateSlow {
@@ -427,7 +443,7 @@ body, html {
 
 .brand-text {
     font-family: var(--font-serif);
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     font-weight: 600;
     letter-spacing: 1px;
     color: var(--gold-light);
@@ -437,26 +453,29 @@ body, html {
 .recipient-pill {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 18px;
+    gap: 9px;
+    padding: 9px 20px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border-gold);
-    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 240, 200, 0.4);
+    backdrop-filter: blur(18px);
     border-radius: 999px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    font-size: 0.9rem;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
+    font-size: 0.92rem;
     cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .recipient-pill:hover {
     background: var(--glass-bg-hover);
     border-color: var(--gold-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(245, 207, 123, 0.3);
 }
 
 .recipient-label {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.82rem;
 }
 
 .recipient-name-tag {
@@ -467,7 +486,7 @@ body, html {
 .btn-icon-edit {
     display: flex;
     align-items: center;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.65);
     transition: color 0.2s ease;
 }
 
@@ -475,11 +494,11 @@ body, html {
     color: #ffffff;
 }
 
-/* Top Actions (Music, Fullscreen) */
+/* Top Actions */
 .top-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .glass-btn {
@@ -488,10 +507,11 @@ body, html {
     justify-content: center;
     gap: 8px;
     height: 44px;
-    padding: 0 16px;
+    padding: 0 18px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
     border-radius: 999px;
     color: #ffffff;
     cursor: pointer;
@@ -508,7 +528,7 @@ body, html {
 
 .glass-btn.playing {
     border-color: var(--rose-primary);
-    box-shadow: 0 0 16px var(--rose-glow);
+    box-shadow: 0 0 18px var(--rose-glow);
 }
 
 /* Audio Visualizer Equalizer Bars */
@@ -532,27 +552,27 @@ body, html {
 /* --- 3D Interaction Orbit Hint --- */
 .orbit-hint {
     position: absolute;
-    top: 85px;
+    top: 90px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: 999px;
-    background: rgba(14, 10, 20, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    font-size: 0.82rem;
-    color: rgba(255, 240, 245, 0.8);
+    background: rgba(14, 10, 20, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    font-size: 0.84rem;
+    color: rgba(255, 240, 245, 0.85);
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
     pointer-events: none;
-    animation: pulseHint 3s infinite;
+    animation: pulseHint 3.2s infinite;
 }
 
 @keyframes pulseHint {
-    0%, 100% { opacity: 0.85; transform: translateX(-50%) translateY(0); }
-    50% { opacity: 0.4; transform: translateX(-50%) translateY(-3px); }
+    0%, 100% { opacity: 0.9; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 0.45; transform: translateX(-50%) translateY(-3px); }
 }
 
 /* ==========================================================================
@@ -560,16 +580,17 @@ body, html {
    ========================================================================== */
 .garden-bottom-dock {
     position: absolute;
-    bottom: 24px;
+    bottom: 26px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 18px;
+    padding: 10px 20px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(22px);
     border-radius: 999px;
     box-shadow: var(--glass-shadow);
     pointer-events: auto;
@@ -600,11 +621,11 @@ body, html {
 }
 
 .dock-item:hover {
-    background: rgba(255, 77, 121, 0.2);
-    border-color: rgba(255, 77, 121, 0.5);
-    transform: translateY(-4px) scale(1.03);
+    background: rgba(255, 77, 121, 0.22);
+    border-color: rgba(255, 77, 121, 0.55);
+    transform: translateY(-4px) scale(1.04);
     color: var(--gold-light);
-    box-shadow: 0 8px 20px rgba(255, 77, 121, 0.25);
+    box-shadow: 0 8px 22px rgba(255, 77, 121, 0.3);
 }
 
 .dock-item:active {
@@ -618,7 +639,7 @@ body, html {
 /* Color Palette Popover */
 .color-popover {
     position: absolute;
-    bottom: 90px;
+    bottom: 92px;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
     display: flex;
@@ -626,7 +647,8 @@ body, html {
     padding: 12px 18px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border-gold);
-    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 240, 200, 0.4);
+    backdrop-filter: blur(22px);
     border-radius: 999px;
     box-shadow: var(--glass-shadow);
     opacity: 0;
@@ -645,7 +667,7 @@ body, html {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 14px;
+    padding: 7px 15px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -656,7 +678,7 @@ body, html {
 }
 
 .theme-btn:hover, .theme-btn.active {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.16);
     border-color: var(--gold-primary);
     transform: scale(1.05);
 }
@@ -665,11 +687,11 @@ body, html {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    box-shadow: 0 0 6px currentColor;
+    box-shadow: 0 0 8px currentColor;
 }
 
 /* ==========================================================================
-   MODAL DIALOGUES (PARCHMENT LETTER, FORTUNE CARDS, LANTERNS)
+   MODAL DIALOGUES
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -678,8 +700,8 @@ body, html {
     width: 100%;
     height: 100%;
     z-index: 50;
-    background: rgba(4, 2, 8, 0.8);
-    backdrop-filter: blur(12px);
+    background: rgba(4, 2, 8, 0.82);
+    backdrop-filter: blur(14px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -696,14 +718,15 @@ body, html {
 
 .modal-card {
     position: relative;
-    max-width: 600px;
+    max-width: 620px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
-    border-radius: 28px;
-    background: rgba(18, 13, 26, 0.92);
+    border-radius: 30px;
+    background: rgba(18, 13, 26, 0.94);
     border: 1px solid var(--glass-border-gold);
-    padding: 36px 32px;
+    border-top: 1px solid rgba(255, 240, 200, 0.5);
+    padding: 38px 34px;
     box-shadow: var(--glass-shadow);
     transform: scale(0.92) translateY(20px);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -717,11 +740,11 @@ body, html {
     position: absolute;
     top: 20px;
     right: 20px;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -731,17 +754,17 @@ body, html {
 }
 
 .btn-close-modal:hover {
-    background: rgba(255, 77, 121, 0.3);
+    background: rgba(255, 77, 121, 0.35);
     border-color: var(--rose-primary);
     transform: rotate(90deg);
 }
 
-/* --- 💌 Vintage Parchment Greeting Letter --- */
+/* --- 💌 Vintage Parchment Greeting Letter with Gold Filigree Corners --- */
 .parchment-letter {
     position: relative;
-    background: radial-gradient(circle at center, #23192d 0%, #17101f 100%);
-    border: 2px solid rgba(245, 207, 123, 0.4);
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6), 0 16px 40px rgba(0, 0, 0, 0.8);
+    background: radial-gradient(circle at center, #24192f 0%, #171020 100%);
+    border: 2px solid rgba(245, 207, 123, 0.45);
+    box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.65), 0 18px 45px rgba(0, 0, 0, 0.85);
 }
 
 .wax-seal-container {
@@ -751,19 +774,20 @@ body, html {
 }
 
 .wax-seal {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
-    background: radial-gradient(circle, #e62b5a 0%, #9e1136 70%, #68051f 100%);
-    border: 3px solid #ff758f;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 43, 90, 0.5);
+    background: radial-gradient(circle at 35% 35%, #ff4d6d 0%, #a81238 65%, #62041d 100%);
+    border: 3px solid #ff859d;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.65), 0 0 24px rgba(255, 77, 109, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--gold-light);
     font-family: var(--font-serif);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 .letter-header {
@@ -773,21 +797,22 @@ body, html {
 
 .letter-title {
     font-family: var(--font-serif);
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     color: var(--gold-primary);
     margin-bottom: 6px;
+    text-shadow: 0 0 15px rgba(245, 207, 123, 0.3);
 }
 
 .letter-to {
     font-family: var(--font-script);
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     color: var(--rose-light);
 }
 
 .letter-body {
     font-family: var(--font-elegant);
-    font-size: 1.25rem;
-    line-height: 1.85;
+    font-size: 1.28rem;
+    line-height: 1.9;
     color: #f7eef5;
     margin-bottom: 30px;
     text-align: justify;
@@ -803,23 +828,23 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    border-top: 1px dashed rgba(245, 207, 123, 0.3);
-    padding-top: 20px;
-    font-size: 0.95rem;
+    border-top: 1px dashed rgba(245, 207, 123, 0.35);
+    padding-top: 22px;
+    font-size: 0.98rem;
 }
 
 .letter-date {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .letter-signature {
     font-family: var(--font-script);
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: var(--gold-primary);
     text-align: right;
 }
 
-/* --- 🎴 Fortune Cards Grid (Tarot 3D Flip) --- */
+/* --- 🎴 Holographic Foil Tarot Cards (3D Flip) --- */
 .fortune-header {
     text-align: center;
     margin-bottom: 24px;
@@ -827,25 +852,25 @@ body, html {
 
 .fortune-header h3 {
     font-family: var(--font-serif);
-    font-size: 1.8rem;
+    font-size: 1.85rem;
     color: var(--gold-primary);
     margin-bottom: 6px;
 }
 
 .fortune-header p {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .fortune-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
 }
 
 .tarot-card {
-    height: 230px;
+    height: 236px;
     perspective: 1000px;
     cursor: pointer;
 }
@@ -856,7 +881,7 @@ body, html {
     height: 100%;
     transform-style: preserve-3d;
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border-radius: 18px;
+    border-radius: 20px;
 }
 
 .tarot-card.flipped .tarot-card-inner {
@@ -868,7 +893,7 @@ body, html {
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 16px;
     display: flex;
     flex-direction: column;
@@ -879,14 +904,16 @@ body, html {
 
 /* Back of Tarot */
 .tarot-card-back {
-    background: linear-gradient(145deg, #1f1430 0%, #11091d 100%);
+    background: linear-gradient(145deg, #221634 0%, #120a1f 100%);
     border: 2px solid var(--glass-border-gold);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+    transition: all 0.3s ease;
 }
 
-.tarot-card-back:hover {
+.tarot-card:hover .tarot-card-back {
     border-color: var(--gold-primary);
-    box-shadow: 0 0 20px rgba(245, 207, 123, 0.4);
+    box-shadow: 0 0 24px rgba(245, 207, 123, 0.5);
+    transform: translateY(-2px);
 }
 
 .tarot-pattern {
@@ -902,50 +929,77 @@ body, html {
 }
 
 .tarot-sigil {
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     animation: pulseSigil 2.5s infinite;
 }
 
 @keyframes pulseSigil {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
+    0%, 100% { transform: scale(1); opacity: 0.85; }
     50% { transform: scale(1.15); opacity: 1; }
 }
 
 .tarot-label {
     font-family: var(--font-serif);
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: var(--gold-primary);
     letter-spacing: 2px;
 }
 
-/* Front of Tarot */
+/* Front of Tarot - Holographic Foil Shimmer */
 .tarot-card-front {
-    background: radial-gradient(circle at 50% 20%, #2b1836 0%, #160c1d 100%);
+    position: relative;
+    background: radial-gradient(circle at 50% 20%, #2f193c 0%, #170d20 100%);
     border: 2px solid var(--gold-primary);
     transform: rotateY(180deg);
-    box-shadow: 0 10px 30px rgba(245, 207, 123, 0.3);
+    box-shadow: 0 10px 30px rgba(245, 207, 123, 0.35);
     justify-content: space-between;
+    overflow: hidden;
+}
+
+.tarot-card-front::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 180, 200, 0.3) 30%,
+        rgba(255, 240, 160, 0.4) 50%,
+        rgba(150, 220, 255, 0.3) 70%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(35deg);
+    pointer-events: none;
+    animation: holoShine 4s infinite;
+}
+
+@keyframes holoShine {
+    0% { left: -60%; }
+    35%, 100% { left: 140%; }
 }
 
 .tarot-badge {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--gold-light);
-    background: rgba(245, 207, 123, 0.15);
-    padding: 3px 8px;
+    background: rgba(245, 207, 123, 0.18);
+    padding: 3px 9px;
     border-radius: 999px;
-    border: 1px solid rgba(245, 207, 123, 0.3);
+    border: 1px solid rgba(245, 207, 123, 0.35);
 }
 
 .tarot-icon {
-    font-size: 2.2rem;
+    font-size: 2.3rem;
     margin: 4px 0;
 }
 
 .tarot-title {
     font-family: var(--font-serif);
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     font-weight: 700;
     color: var(--gold-primary);
     margin-bottom: 4px;
@@ -953,42 +1007,43 @@ body, html {
 
 .tarot-quote {
     font-style: italic;
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     color: #ffd6e6;
     margin-bottom: 6px;
-    line-height: 1.3;
+    line-height: 1.35;
 }
 
 .tarot-desc {
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.35;
+    font-size: 0.73rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.38;
 }
 
 /* --- 🏮 Sky Lantern Modal --- */
 .lantern-input-group {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin: 20px 0;
+    gap: 15px;
+    margin: 22px 0;
 }
 
 .app-input {
     width: 100%;
-    padding: 14px 18px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 15px 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     color: #ffffff;
     font-family: var(--font-body);
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     outline: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.25s ease, background 0.25s ease;
 }
 
 .app-input:focus {
     border-color: var(--gold-primary);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 16px rgba(245, 207, 123, 0.25);
 }
 
 .quick-wishes {
@@ -998,41 +1053,42 @@ body, html {
 }
 
 .wish-chip {
-    padding: 6px 14px;
+    padding: 7px 15px;
     border-radius: 999px;
-    background: rgba(255, 77, 121, 0.12);
-    border: 1px solid rgba(255, 77, 121, 0.25);
-    font-size: 0.8rem;
+    background: rgba(255, 77, 121, 0.14);
+    border: 1px solid rgba(255, 77, 121, 0.28);
+    font-size: 0.82rem;
     color: #ffccd5;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 .wish-chip:hover {
-    background: rgba(255, 77, 121, 0.3);
+    background: rgba(255, 77, 121, 0.32);
     border-color: var(--rose-primary);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 77, 121, 0.25);
 }
 
 .btn-action-primary {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     border-radius: 999px;
     background: var(--gold-gradient);
     border: none;
     font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.98rem;
+    font-weight: 700;
     letter-spacing: 1px;
     color: #1a0815;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(245, 207, 123, 0.35);
+    box-shadow: 0 10px 28px rgba(245, 207, 123, 0.4);
     transition: all 0.3s ease;
 }
 
 .btn-action-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(245, 207, 123, 0.5);
+    box-shadow: 0 14px 34px rgba(245, 207, 123, 0.55);
 }
 
 /* ==========================================================================
@@ -1043,15 +1099,15 @@ body, html {
     top: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(-30px);
-    background: rgba(24, 16, 34, 0.9);
+    background: rgba(24, 16, 36, 0.92);
     border: 1px solid var(--gold-primary);
     color: var(--gold-light);
-    padding: 12px 26px;
+    padding: 13px 28px;
     border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 207, 123, 0.3);
-    backdrop-filter: blur(14px);
+    font-size: 0.92rem;
+    font-weight: 600;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(245, 207, 123, 0.35);
+    backdrop-filter: blur(16px);
     z-index: 100;
     opacity: 0;
     visibility: hidden;
@@ -1070,9 +1126,9 @@ body, html {
    ========================================================================== */
 @media (max-width: 768px) {
     .garden-top-bar {
-        top: 12px;
-        left: 12px;
-        right: 12px;
+        top: 14px;
+        left: 14px;
+        right: 14px;
     }
 
     .brand-badge {
@@ -1080,24 +1136,24 @@ body, html {
     }
 
     .orbit-hint {
-        top: 70px;
-        font-size: 0.75rem;
-        padding: 6px 14px;
+        top: 74px;
+        font-size: 0.76rem;
+        padding: 6px 15px;
     }
 
     .garden-bottom-dock {
-        bottom: 16px;
-        padding: 8px 12px;
+        bottom: 18px;
+        padding: 8px 14px;
         gap: 8px;
     }
 
     .dock-item {
         padding: 8px 14px;
-        font-size: 0.8rem;
+        font-size: 0.82rem;
     }
 
     .modal-card {
-        padding: 24px 20px;
+        padding: 26px 20px;
     }
 
     .fortune-cards-grid {

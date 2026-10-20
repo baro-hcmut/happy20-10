@@ -1,6 +1,8 @@
 /**
- * 🌹 Three.js Enchanted 3D Velvet Blooming Rose Engine
- * High-fidelity organic procedural petals, dewdrops, dynamic themes, and 360° orbit
+ * 🌹 Three.js Enchanted 3D Velvet Blooming Rose Engine - Masterclass Edition
+ * High-fidelity organic procedural petals with velvet texture maps,
+ * golden stamen pollen cluster, thorns, optical dewdrops, studio lighting,
+ * and 360° inertial orbit navigation.
  */
 
 class Flower3DEngine {
@@ -16,68 +18,77 @@ class Flower3DEngine {
         this.allMaterials = [];
         this.dewdrops = [];
         this.dustPoints = null;
+        this.petalTextures = {};
+        this.stamenGroup = null;
+        this.haloMesh = null;
+        this.rippleRings = [];
 
-        // Current color theme
+        // Color Theme Palettes
         this.currentTheme = 'crimson';
         this.themes = {
             crimson: {
-                name: 'Ruby Velvet (Đỏ Nhung)',
+                name: 'Ruby Velvet (Đỏ Nhung Hoàng Gia)',
                 baseHue: 0.98,
-                sat: 0.90,
-                light: 0.38,
+                sat: 0.92,
+                light: 0.36,
                 sheenHue: 0.97,
                 sheenLight: 0.62,
-                rimColor: 0xffaacc,
+                rimColor: 0xff88aa,
                 keyColor: 0xfff0e4,
-                dustColor: 0xffd5e0
+                dustColor: 0xffd5e0,
+                haloColor: 0xff2a55
             },
             sakura: {
-                name: 'Pastel Sakura (Hồng Phấn)',
+                name: 'Pastel Sakura (Hồng Phấn Ngọt Ngào)',
                 baseHue: 0.93,
-                sat: 0.75,
+                sat: 0.78,
                 light: 0.58,
                 sheenHue: 0.94,
-                sheenLight: 0.78,
-                rimColor: 0xffd9ec,
+                sheenLight: 0.82,
+                rimColor: 0xffc2d4,
                 keyColor: 0xfff5f8,
-                dustColor: 0xffe6f2
+                dustColor: 0xffe6f2,
+                haloColor: 0xff8da1
             },
             violet: {
                 name: 'Mystic Violet (Tím Dạ Yến)',
                 baseHue: 0.78,
-                sat: 0.85,
-                light: 0.42,
+                sat: 0.88,
+                light: 0.40,
                 sheenHue: 0.80,
-                sheenLight: 0.70,
-                rimColor: 0xd8b4fe,
+                sheenLight: 0.72,
+                rimColor: 0xc084fc,
                 keyColor: 0xf5f0ff,
-                dustColor: 0xe9d5ff
+                dustColor: 0xe9d5ff,
+                haloColor: 0x9333ea
             },
             gold: {
-                name: 'Golden Aurora (Hoàng Kim)',
+                name: 'Golden Aurora (Hoàng Kim Ánh Dương)',
                 baseHue: 0.11,
-                sat: 0.95,
+                sat: 0.96,
                 light: 0.46,
                 sheenHue: 0.13,
-                sheenLight: 0.72,
-                rimColor: 0xffe082,
+                sheenLight: 0.75,
+                rimColor: 0xfde047,
                 keyColor: 0xfff8e1,
-                dustColor: 0xfff3b0
+                dustColor: 0xfff3b0,
+                haloColor: 0xeab308
             },
             crystal: {
-                name: 'Frozen Crystal (Pha Lê Băng)',
+                name: 'Frozen Crystal (Pha Lê Băng Ngọc)',
                 baseHue: 0.52,
-                sat: 0.80,
-                light: 0.50,
+                sat: 0.82,
+                light: 0.48,
                 sheenHue: 0.55,
-                sheenLight: 0.82,
-                rimColor: 0xa7f3d0,
+                sheenLight: 0.85,
+                rimColor: 0x67e8f9,
                 keyColor: 0xecfeff,
-                dustColor: 0xcffafe
+                dustColor: 0xcffafe,
+                haloColor: 0x06b6d4
             }
         };
 
-        // Blooming progress: 0 (tight bud) -> 1 (full bloom)
+        // Blooming animation state
         this.bloomProgress = 0.0;
         this.targetBloom = 0.0;
         this.isBlooming = false;
@@ -111,9 +122,9 @@ class Flower3DEngine {
         // Camera
         this.camera = new THREE.PerspectiveCamera(52, width / height, 0.1, 100);
         this.camera.position.set(0, 1.3, this.zoomDistance);
-        this.camera.lookAt(0, 0.35, 0);
+        this.camera.lookAt(0, 0.38, 0);
 
-        // WebGL Renderer
+        // WebGL Renderer with High-Precision Tone Mapping
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
@@ -124,20 +135,20 @@ class Flower3DEngine {
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.2;
+        this.renderer.toneMappingExposure = 1.25;
         this.container.appendChild(this.renderer.domElement);
 
         this.clock = new THREE.Clock();
 
-        // Studio Environment & Lighting
+        // Generate Procedural Textures & Environment
+        this.generatePetalTextureMap();
         this.setupLighting();
         this.generateStudioReflection();
 
-        // Build 3D Rose
+        // Build 3D Elements
         this.buildRose();
-
-        // Glowing dust motes
         this.createAtmosphericDust();
+        this.createCelestialHalo();
 
         // Event listeners
         this.bindEvents();
@@ -147,54 +158,103 @@ class Flower3DEngine {
         requestAnimationFrame(this.animate);
     }
 
+    // --- 🎨 Procedural Velvet Texture Map ---
+    generatePetalTextureMap() {
+        const size = 512;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Base gradient from deep stem base to soft petal lip
+        const grad = ctx.createLinearGradient(size / 2, size, size / 2, 0);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+        grad.addColorStop(0.3, 'rgba(30, 0, 10, 0.2)');
+        grad.addColorStop(0.7, 'rgba(255, 255, 255, 0.05)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0.25)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, size, size);
+
+        // Organic longitudinal velvet micro-veins
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.lineWidth = 1.2;
+        const veinCount = 45;
+        for (let i = 0; i < veinCount; i++) {
+            const spread = (i / veinCount - 0.5) * (size * 0.85);
+            ctx.beginPath();
+            ctx.moveTo(size / 2, size * 0.95);
+            ctx.bezierCurveTo(
+                size / 2 + spread * 0.4, size * 0.65,
+                size / 2 + spread * 0.8, size * 0.35,
+                size / 2 + spread, size * 0.05
+            );
+            ctx.stroke();
+        }
+
+        // Soft velvet edge rim
+        const edgeGrad = ctx.createRadialGradient(size / 2, 0, size * 0.1, size / 2, 0, size * 0.5);
+        edgeGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+        edgeGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = edgeGrad;
+        ctx.fillRect(0, 0, size, size * 0.6);
+
+        this.petalTexture = new THREE.CanvasTexture(canvas);
+        this.petalTexture.wrapS = THREE.ClampToEdgeWrapping;
+        this.petalTexture.wrapT = THREE.ClampToEdgeWrapping;
+    }
+
     setupLighting() {
-        // Soft ambient light
-        this.ambientLight = new THREE.AmbientLight(0xfff5f0, 0.55);
+        // Soft ambient illumination
+        this.ambientLight = new THREE.AmbientLight(0xfff5f0, 0.65);
         this.scene.add(this.ambientLight);
 
-        // Key light (Warm golden sunlight / spotlight)
-        this.keyLight = new THREE.DirectionalLight(0xfff0e4, 2.4);
-        this.keyLight.position.set(3.5, 5.5, 3.5);
+        // Key light (Warm golden studio spotlight)
+        this.keyLight = new THREE.DirectionalLight(0xfff0e4, 2.5);
+        this.keyLight.position.set(3.5, 6.0, 3.5);
         this.keyLight.castShadow = true;
         this.keyLight.shadow.mapSize.width = 2048;
         this.keyLight.shadow.mapSize.height = 2048;
         this.keyLight.shadow.bias = -0.0001;
         this.scene.add(this.keyLight);
 
-        // Fill light (Gentle rose-tinted soft fill)
-        this.fillLight = new THREE.DirectionalLight(0xfce7f3, 1.2);
-        this.fillLight.position.set(-3.5, 3.0, 2.5);
+        // Fill light (Soft rose-tinted fill)
+        this.fillLight = new THREE.DirectionalLight(0xfce7f3, 1.3);
+        this.fillLight.position.set(-3.5, 3.5, 2.5);
         this.scene.add(this.fillLight);
 
-        // Rim backlight (Velvet petal edge halo glow)
-        this.rimLight = new THREE.DirectionalLight(0xffaacc, 1.8);
-        this.rimLight.position.set(0, 4.0, -4.5);
+        // Rim backlight (Velvet edge halo glow)
+        this.rimLight = new THREE.DirectionalLight(0xffaacc, 2.0);
+        this.rimLight.position.set(0, 4.5, -4.5);
         this.scene.add(this.rimLight);
+
+        // Core underglow light for interior petal brilliance
+        this.coreLight = new THREE.PointLight(0xff4d79, 1.5, 3.5);
+        this.coreLight.position.set(0, 0.65, 0);
+        this.scene.add(this.coreLight);
     }
 
     generateStudioReflection() {
-        // Procedural soft gradient canvas for luxury HDR reflections
         const canvas = document.createElement('canvas');
         canvas.width = 512;
         canvas.height = 256;
         const ctx = canvas.getContext('2d');
 
         const grad = ctx.createLinearGradient(0, 0, 0, 256);
-        grad.addColorStop(0, '#1a1020');
-        grad.addColorStop(0.5, '#0d0812');
-        grad.addColorStop(1, '#050208');
+        grad.addColorStop(0, '#1c1024');
+        grad.addColorStop(0.5, '#0e0915');
+        grad.addColorStop(1, '#050308');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, 512, 256);
 
         // Soft spotlight reflections
-        const rad1 = ctx.createRadialGradient(150, 80, 5, 150, 80, 120);
-        rad1.addColorStop(0, 'rgba(255, 230, 240, 0.9)');
+        const rad1 = ctx.createRadialGradient(160, 80, 5, 160, 80, 130);
+        rad1.addColorStop(0, 'rgba(255, 235, 245, 0.9)');
         rad1.addColorStop(1, 'transparent');
         ctx.fillStyle = rad1;
-        ctx.fillRect(0, 0, 300, 200);
+        ctx.fillRect(0, 0, 320, 200);
 
-        const rad2 = ctx.createRadialGradient(380, 90, 5, 380, 90, 110);
-        rad2.addColorStop(0, 'rgba(255, 240, 200, 0.8)');
+        const rad2 = ctx.createRadialGradient(380, 90, 5, 380, 90, 120);
+        rad2.addColorStop(0, 'rgba(255, 245, 210, 0.85)');
         rad2.addColorStop(1, 'transparent');
         ctx.fillStyle = rad2;
         ctx.fillRect(250, 0, 262, 200);
@@ -214,7 +274,8 @@ class Flower3DEngine {
             curl = 0.32,
             cup = 0.22,
             flare = 0.12,
-            ruffle = 0.025
+            ruffle = 0.025,
+            edgeRoll = 0.04
         } = options;
 
         const geom = new THREE.PlaneGeometry(width, length, uSegments, vSegments);
@@ -228,17 +289,20 @@ class Flower3DEngine {
             const v = Math.max(0, Math.min(1, y / length));
             const u = x / (width * 0.5);
 
-            // Natural petal outline curve (slender base, wide middle, tapered tip)
+            // Natural organic petal contour (slender base, wide body, elegant tip)
             const widthScale = Math.sin(Math.pow(v, 0.72) * Math.PI);
             pos.setX(i, x * Math.max(0.06, widthScale));
 
-            // Dual-axis 3D cupping and petal curling
+            // Dual-axis 3D cupping, curling, and edge roll
             const cupOffset = (1 - u * u) * Math.sin(v * Math.PI * 0.85) * cup;
             const curlOffset = Math.pow(v, 1.6) * curl - Math.sin(v * Math.PI) * flare;
             const edgeDist = Math.abs(u);
             const edgeRuffle = edgeDist > 0.5 ? Math.sin(v * 24.0 + edgeDist * 6.0) * ruffle * (edgeDist - 0.5) : 0;
+            
+            // Subtle outward dog-ear fold on upper petal corners
+            const lipRoll = v > 0.75 ? Math.sin((v - 0.75) * 4 * Math.PI) * edgeRoll * (1 - edgeDist) : 0;
 
-            pos.setZ(i, cupOffset - curlOffset + edgeRuffle);
+            pos.setZ(i, cupOffset - curlOffset + edgeRuffle + lipRoll);
         }
 
         pos.needsUpdate = true;
@@ -262,12 +326,13 @@ class Flower3DEngine {
 
         const mat = new THREE.MeshPhysicalMaterial({
             color: baseColor,
-            roughness: 0.38,
-            metalness: 0.02,
-            transmission: 0.14,
+            map: this.petalTexture,
+            roughness: 0.36,
+            metalness: 0.03,
+            transmission: 0.18,
             sheen: sheenColor,
-            clearcoat: 0.18,
-            clearcoatRoughness: 0.22,
+            clearcoat: 0.22,
+            clearcoatRoughness: 0.20,
             side: THREE.DoubleSide
         });
 
@@ -276,12 +341,12 @@ class Flower3DEngine {
     }
 
     createDewdrop(radius = 0.035) {
-        const geom = new THREE.SphereGeometry(radius, 14, 14);
+        const geom = new THREE.SphereGeometry(radius, 16, 16);
         const mat = new THREE.MeshPhysicalMaterial({
             color: 0xffffff,
-            roughness: 0.05,
+            roughness: 0.04,
             metalness: 0,
-            transmission: 0.95,
+            transmission: 0.96,
             ior: 1.333,
             clearcoat: 1.0,
             clearcoatRoughness: 0.04
@@ -299,22 +364,26 @@ class Flower3DEngine {
 
         this.allPetals = [];
 
-        // --- Tier 1: Inner Spiraling Bud Core (10 petals) ---
-        const coreCount = 10;
+        // --- Core: Golden Stamen & Pollen Anther Cluster ---
+        this.createStamenCluster();
+
+        // --- Tier 1: Inner Spiraling Bud Core (12 petals) ---
+        const coreCount = 12;
         for (let i = 0; i < coreCount; i++) {
             const geom = this.createCurvedPetalGeometry(0.32, 0.65, {
                 curl: 0.42,
                 cup: 0.36,
                 flare: 0.06,
                 ruffle: 0.015,
+                edgeRoll: 0.02,
                 uSegments: 20,
                 vSegments: 28
             });
-            const mat = this.createPetalMaterial(0.82 + (i / coreCount) * 0.18, -0.01);
+            const mat = this.createPetalMaterial(0.80 + (i / coreCount) * 0.20, -0.01);
             const petal = new THREE.Mesh(geom, mat);
 
             const angle = i * 2.39996; // Golden ratio spiral
-            const radius = 0.03 + (i / coreCount) * 0.08;
+            const radius = 0.025 + (i / coreCount) * 0.07;
             petal.position.set(
                 Math.cos(angle) * radius,
                 0.55 + (i / coreCount) * 0.05,
@@ -323,7 +392,7 @@ class Flower3DEngine {
             petal.rotation.y = -angle + Math.PI / 2;
             petal.castShadow = true;
 
-            const budRotZ = -0.08;
+            const budRotZ = -0.06;
             const bloomRotZ = -0.22 - (i / coreCount) * 0.15;
             petal.rotation.z = budRotZ;
 
@@ -339,14 +408,15 @@ class Flower3DEngine {
             });
         }
 
-        // --- Tier 2: Middle Unfurling Petals (14 petals) ---
-        const midCount = 14;
+        // --- Tier 2: Middle Unfurling Petals (16 petals) ---
+        const midCount = 16;
         for (let i = 0; i < midCount; i++) {
             const geom = this.createCurvedPetalGeometry(0.55, 0.95, {
                 curl: 0.28,
                 cup: 0.25,
                 flare: 0.22,
-                ruffle: 0.02,
+                ruffle: 0.022,
+                edgeRoll: 0.035,
                 uSegments: 24,
                 vSegments: 32
             });
@@ -354,7 +424,7 @@ class Flower3DEngine {
             const petal = new THREE.Mesh(geom, mat);
 
             const angle = i * (Math.PI * 2 / midCount) + (i % 2) * 0.25;
-            const radius = 0.14 + (i / midCount) * 0.14;
+            const radius = 0.12 + (i / midCount) * 0.14;
             petal.position.set(
                 Math.cos(angle) * radius,
                 0.50 - (i / midCount) * 0.04,
@@ -363,7 +433,7 @@ class Flower3DEngine {
             petal.rotation.y = -angle + Math.PI / 2;
             petal.castShadow = true;
 
-            const budRotZ = -0.15;
+            const budRotZ = -0.14;
             const bloomRotZ = -0.48 - (i / midCount) * 0.22;
             petal.rotation.z = budRotZ;
 
@@ -379,14 +449,15 @@ class Flower3DEngine {
             });
         }
 
-        // --- Tier 3: Grand Outer Blooming Petals with Dewdrops (16 petals) ---
-        const outerCount = 16;
+        // --- Tier 3: Grand Outer Blooming Petals with Dewdrops (18 petals) ---
+        const outerCount = 18;
         for (let i = 0; i < outerCount; i++) {
             const geom = this.createCurvedPetalGeometry(0.72, 1.25, {
                 curl: 0.18,
                 cup: 0.18,
                 flare: 0.38,
-                ruffle: 0.035,
+                ruffle: 0.038,
+                edgeRoll: 0.05,
                 uSegments: 28,
                 vSegments: 36
             });
@@ -404,17 +475,17 @@ class Flower3DEngine {
             petal.castShadow = true;
             petal.receiveShadow = true;
 
-            const budRotZ = -0.22;
+            const budRotZ = -0.20;
             const bloomRotZ = -0.80 - (i / outerCount) * 0.25;
             petal.rotation.z = budRotZ;
 
-            // Dewdrops on alternate outer petals
+            // Dewdrops on outer petals
             if (i % 2 === 0) {
-                const drop = this.createDewdrop(0.025 + Math.random() * 0.018);
+                const drop = this.createDewdrop(0.026 + Math.random() * 0.018);
                 drop.position.set(
                     (Math.random() - 0.5) * 0.22,
                     0.45 + Math.random() * 0.35,
-                    0.07
+                    0.075
                 );
                 petal.add(drop);
             }
@@ -472,34 +543,91 @@ class Flower3DEngine {
         stem.castShadow = true;
         this.roseGroup.add(stem);
 
+        // --- Thorns on Stem ---
+        this.createThorns(stemMat);
+
         // --- Leaves ---
         this.createLeaves(stemMat);
 
-        // --- Reflected Dark Pedestal Ring ---
-        const pedestalGeom = new THREE.CylinderGeometry(1.6, 1.7, 0.06, 64);
-        const pedestalMat = new THREE.MeshStandardMaterial({
-            color: 0x0a0a10,
-            roughness: 0.15,
-            metalness: 0.8
-        });
-        const pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
-        pedestal.position.y = -0.88;
-        pedestal.receiveShadow = true;
-        this.scene.add(pedestal);
+        // --- Obsidian Mirror Pedestal with Concentric Glowing Ripple Rings ---
+        this.createObsidianPedestal();
+    }
 
-        // Contact glow ring
-        const ringGeom = new THREE.RingGeometry(1.58, 1.62, 64);
-        const ringMat = new THREE.MeshBasicMaterial({
-            color: 0xffaacc,
-            transparent: true,
-            opacity: 0.4,
-            side: THREE.DoubleSide
+    // --- ✨ Center Golden Stamen & Pollen Cluster ---
+    createStamenCluster() {
+        this.stamenGroup = new THREE.Group();
+        this.stamenGroup.position.set(0, 0.52, 0);
+
+        const count = 28;
+        const radius = 0.07;
+        const height = 0.16;
+
+        const antherGeom = new THREE.SphereGeometry(0.014, 10, 10);
+        antherGeom.scale(1, 1.6, 1);
+        const antherMat = new THREE.MeshStandardMaterial({
+            color: 0xffd166,
+            emissive: 0xffa000,
+            emissiveIntensity: 0.5,
+            roughness: 0.5
         });
-        const ring = new THREE.Mesh(ringGeom, ringMat);
-        ring.rotation.x = -Math.PI / 2;
-        ring.position.y = -0.85;
-        this.scene.add(ring);
-        this.pedestalRing = ring;
+
+        const lineMat = new THREE.LineBasicMaterial({
+            color: 0xffeedd,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        for (let i = 0; i < count; i++) {
+            const angle = (i / count) * Math.PI * 2 + (i % 3) * 0.15;
+            const r = (0.2 + 0.8 * Math.sqrt((i + 1) / count)) * radius;
+            const tipX = Math.cos(angle) * (r + 0.02);
+            const tipZ = Math.sin(angle) * (r + 0.02);
+            const tipY = height * (0.8 + 0.25 * Math.sin(i * 1.5));
+
+            const points = [
+                new THREE.Vector3(Math.cos(angle) * r * 0.2, 0, Math.sin(angle) * r * 0.2),
+                new THREE.Vector3(Math.cos(angle) * r, tipY * 0.5, Math.sin(angle) * r),
+                new THREE.Vector3(tipX, tipY, tipZ)
+            ];
+            const curve = new THREE.CatmullRomCurve3(points);
+            const lineGeom = new THREE.BufferGeometry().setFromPoints(curve.getPoints(8));
+            const line = new THREE.Line(lineGeom, lineMat);
+            this.stamenGroup.add(line);
+
+            const anther = new THREE.Mesh(antherGeom, antherMat);
+            anther.position.set(tipX, tipY, tipZ);
+            this.stamenGroup.add(anther);
+        }
+
+        this.roseGroup.add(this.stamenGroup);
+    }
+
+    // --- 🌿 Realistic Curved Thorns ---
+    createThorns(stemMat) {
+        const thornGeom = new THREE.ConeGeometry(0.02, 0.065, 8);
+        thornGeom.translate(0, 0.03, 0);
+        thornGeom.rotateZ(Math.PI / 2.3);
+
+        const thornMat = new THREE.MeshPhysicalMaterial({
+            color: 0x6e2626,
+            roughness: 0.35,
+            clearcoat: 0.2
+        });
+
+        const thornPositions = [
+            { y: 0.05, angle: 0.8 },
+            { y: -0.15, angle: 3.2 },
+            { y: -0.35, angle: 1.7 },
+            { y: -0.60, angle: 4.8 }
+        ];
+
+        thornPositions.forEach(tp => {
+            const thorn = new THREE.Mesh(thornGeom, thornMat);
+            thorn.position.set(Math.cos(tp.angle) * 0.038, tp.y, Math.sin(tp.angle) * 0.038);
+            thorn.rotation.y = -tp.angle;
+            thorn.castShadow = true;
+            this.roseGroup.add(thorn);
+        });
     }
 
     createLeaves(stemMat) {
@@ -548,8 +676,65 @@ class Flower3DEngine {
         });
     }
 
+    createObsidianPedestal() {
+        const pedestalGeom = new THREE.CylinderGeometry(1.6, 1.72, 0.07, 64);
+        const pedestalMat = new THREE.MeshStandardMaterial({
+            color: 0x08080d,
+            roughness: 0.12,
+            metalness: 0.85
+        });
+        const pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
+        pedestal.position.y = -0.88;
+        pedestal.receiveShadow = true;
+        this.scene.add(pedestal);
+
+        // Concentric Glowing Neon Rings
+        this.rippleRings = [];
+        [1.62, 1.35].forEach((radius, idx) => {
+            const ringGeom = new THREE.RingGeometry(radius - 0.015, radius, 64);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: this.themes[this.currentTheme].rimColor,
+                transparent: true,
+                opacity: 0.5 - idx * 0.2,
+                side: THREE.DoubleSide
+            });
+            const ring = new THREE.Mesh(ringGeom, ringMat);
+            ring.rotation.x = -Math.PI / 2;
+            ring.position.y = -0.84 + idx * 0.002;
+            this.scene.add(ring);
+            this.rippleRings.push(ring);
+        });
+    }
+
+    createCelestialHalo() {
+        // Soft volumetric halo behind the flower
+        const haloGeom = new THREE.PlaneGeometry(3.2, 3.2);
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        const rad = ctx.createRadialGradient(128, 128, 10, 128, 128, 120);
+        rad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+        rad.addColorStop(0.35, 'rgba(255, 105, 180, 0.2)');
+        rad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = rad;
+        ctx.fillRect(0, 0, 256, 256);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        const haloMat = new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        this.haloMesh = new THREE.Mesh(haloGeom, haloMat);
+        this.haloMesh.position.set(0, 0.45, -0.6);
+        this.scene.add(this.haloMesh);
+    }
+
     createAtmosphericDust() {
-        const count = 120;
+        const count = 140;
         const geom = new THREE.BufferGeometry();
         const pos = new Float32Array(count * 3);
         const vel = new Float32Array(count * 3);
@@ -570,10 +755,10 @@ class Flower3DEngine {
         geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
         const mat = new THREE.PointsMaterial({
-            size: 0.035,
+            size: 0.038,
             color: this.themes[this.currentTheme].dustColor,
             transparent: true,
-            opacity: 0.7,
+            opacity: 0.75,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
@@ -593,8 +778,13 @@ class Flower3DEngine {
         // Update lighting colors
         if (this.rimLight) this.rimLight.color.setHex(theme.rimColor);
         if (this.keyLight) this.keyLight.color.setHex(theme.keyColor);
-        if (this.pedestalRing) this.pedestalRing.material.color.setHex(theme.rimColor);
+        if (this.coreLight) this.coreLight.color.setHex(theme.haloColor);
         if (this.dustPoints) this.dustPoints.material.color.setHex(theme.dustColor);
+
+        // Update ripple rings
+        this.rippleRings.forEach(ring => {
+            ring.material.color.setHex(theme.rimColor);
+        });
 
         // Update petal materials
         this.allMaterials.forEach(({ mat, brightness, hueOffset }) => {
@@ -624,10 +814,10 @@ class Flower3DEngine {
         if (window.confetti) {
             setTimeout(() => {
                 window.confetti({
-                    particleCount: 60,
-                    spread: 80,
+                    particleCount: 75,
+                    spread: 85,
                     origin: { y: 0.65 },
-                    colors: ['#ff8da1', '#ffccd5', '#ffd700', '#fff']
+                    colors: ['#ff8da1', '#ffccd5', '#ffd700', '#ffffff', '#e8ba5d']
                 });
             }, 1200);
         }
@@ -726,6 +916,23 @@ class Flower3DEngine {
 
             const currentScale = p.budScale + (p.bloomScale - p.budScale) * this.bloomProgress;
             p.mesh.scale.setScalar(currentScale);
+        });
+
+        // Golden stamen reveal during bloom
+        if (this.stamenGroup) {
+            const stamenScale = 0.4 + this.bloomProgress * 0.6;
+            this.stamenGroup.scale.setScalar(stamenScale);
+            this.stamenGroup.rotation.y = elapsed * 0.05;
+        }
+
+        // Halo gentle pulse
+        if (this.haloMesh) {
+            this.haloMesh.scale.setScalar(1 + Math.sin(elapsed * 1.5) * 0.08);
+        }
+
+        // Concentric ripples pulse
+        this.rippleRings.forEach((ring, idx) => {
+            ring.scale.setScalar(1 + Math.sin(elapsed * 2 + idx) * 0.015);
         });
 
         // Smooth orbit damping
