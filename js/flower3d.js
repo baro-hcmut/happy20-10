@@ -1590,7 +1590,7 @@ class Flower3DEngine {
                         butterflyData.butterflyRef.triggerAcrobaticLoop();
                     }
                     if (window.soundEngine) window.soundEngine.playFairyHarp();
-                    if (window.showToast) window.showToast("🦋 Chú bướm dạ quang gửi tặng em muôn điều diệu kỳ!");
+                    if (window.showToast) window.showToast("🦋 Chú bướm dạ quang gửi tặng bạn muôn điều diệu kỳ!");
                     this.spawn3DPetalFlakes(hit.point, 14);
                     if (window.particleEngine) window.particleEngine.spawnCursorSparkles(clientX, clientY);
                     return;

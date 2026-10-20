@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Parse URL Params for Recipient Name
     const urlParams = new URLSearchParams(window.location.search);
-    let recipientName = urlParams.get('to') || urlParams.get('name') || 'Em';
+    let recipientName = urlParams.get('to') || urlParams.get('name') || 'Bạn';
     recipientName = decodeURIComponent(recipientName).trim();
 
     // Elements
@@ -390,10 +390,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCinematicMode = document.getElementById('btn-cinematic-mode');
     const subtitleText = document.getElementById('subtitle-text');
     const romanticQuotes = [
-        `"Gửi ${recipientName}: Em xứng đáng với tất cả những điều dịu dàng và tuyệt mỹ nhất trên thế gian."`,
-        `"Mỗi đóa hoa nở rộ giữa ngân hà đêm nay là một lời chúc ngọt ngào dành riêng cho em."`,
-        `"Nụ cười của em là ánh dương rực rỡ nhất làm bừng sáng cả bầu trời tinh tú."`,
-        `"Chúc ngày 20/10 của em vẹn tròn yêu thương, bình an trong tâm và hạnh phúc bất tận 💖"`
+        `"Gửi ${recipientName}: Bạn xứng đáng với tất cả những điều dịu dàng và tốt đẹp nhất trên thế gian."`,
+        `"Mỗi đóa hoa nở rộ giữa ngân hà đêm nay là một lời chúc ngọt ngào dành riêng cho bạn."`,
+        `"Nụ cười của bạn là ánh dương rực rỡ nhất làm bừng sáng cả bầu trời tinh tú."`,
+        `"Chúc ngày 20/10 của bạn vẹn tròn niềm vui, bình an trong tâm và hạnh phúc bất tận 💖"`
     ];
     let quoteIndex = 0;
     let quoteTimer = null;
@@ -628,35 +628,35 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: '👑',
             title: 'Nhan Sắc Tỏa Sáng',
             badge: 'Thượng Thượng Quẻ',
-            quote: 'Nụ cười của em là ánh dương rực rỡ nhất làm bừng sáng cả thế gian.',
-            desc: 'Chúc em mỗi ngày trôi qua đều xinh đẹp kiêu sa như đóa hồng nhung, tự tin sải bước và luôn tràn ngập hạnh phúc!'
+            quote: 'Nụ cười của bạn là ánh dương rực rỡ nhất làm bừng sáng cả thế gian.',
+            desc: 'Chúc bạn mỗi ngày trôi qua đều xinh đẹp kiêu sa như đóa hồng nhung, tự tin sải bước và luôn tràn ngập hạnh phúc!'
         },
         {
             icon: '✨',
             title: 'Vạn Sự Hanh Thông',
             badge: 'Đại Cát Đại Lợi',
-            quote: 'Khi tâm em hướng về điều tươi sáng, vũ trụ sẽ hợp sức dẫn lối.',
-            desc: 'Mọi dự định, ước mơ và kế hoạch trong công việc hay học tập của em sắp tới đều sẽ đơm hoa kết trái mỹ mãn ngoài mong đợi!'
+            quote: 'Khi tâm bạn hướng về điều tươi sáng, vũ trụ sẽ hợp sức dẫn lối.',
+            desc: 'Mọi dự định, ước mơ và kế hoạch trong công việc hay học tập của bạn sắp tới đều sẽ đơm hoa kết trái mỹ mãn ngoài mong đợi!'
         },
         {
             icon: '💖',
             title: 'Đong Đầy Yêu Thương',
             badge: 'Tình Duyên Viên Mãn',
-            quote: 'Em xứng đáng được yêu thương bằng cả sự dịu dàng và chân thành nhất.',
-            desc: 'Chúc em luôn được chở che, thấu hiểu và nâng niu. Trái tim em sẽ luôn tràn ngập sự ngọt ngào, ấm áp từ người thương.'
+            quote: 'Bạn xứng đáng được yêu thương bằng cả sự dịu dàng và chân thành nhất.',
+            desc: 'Chúc bạn luôn được chở che, thấu hiểu và nâng niu. Trái tim bạn sẽ luôn tràn ngập sự ngọt ngào, ấm áp từ những người thân thương.'
         },
         {
             icon: '🍀',
             title: 'May Mắn Gõ Cửa',
             badge: 'Quý Nhân Phù Trợ',
             quote: 'May mắn không phải ngẫu nhiên, mà là phúc lành dành cho tâm hồn thuần khiết.',
-            desc: 'Đi đến đâu em cũng sẽ gặp được cơ duyên tốt lành, những điều trắc trở tự khắc hóa nhẹ nhàng, niềm vui nhân lên gấp bội!'
+            desc: 'Đi đến đâu bạn cũng sẽ gặp được cơ duyên tốt lành, những điều trắc trở tự khắc hóa nhẹ nhàng, niềm vui nhân lên gấp bội!'
         },
         {
             icon: '💎',
             title: 'Tự Do & Kiêu Hãnh',
             badge: 'Tâm Hồn Tự Do',
-            quote: 'Hãy kiêu hãnh như một nàng công chúa và tự do như cánh hoa đón gió.',
+            quote: 'Hãy kiêu hãnh như một nữ hoàng và tự do như cánh hoa đón gió.',
             desc: 'Tự chủ trong cảm xúc, tự tin làm những điều mình khao khát và viết nên câu chuyện cuộc đời rực rỡ nhất!'
         },
         {
@@ -664,21 +664,21 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Bình Yên Tâm Hồn',
             badge: 'An Nhiên Tự Tại',
             quote: 'Bình yên không phải nơi không có bão, mà là tâm tĩnh lặng giữa ngàn giông gió.',
-            desc: 'Chúc em tìm thấy sự an tĩnh trong từng hơi thở, nụ cười luôn đọng nơi khoé mắt và mỗi ngày đều hạnh phúc an yên.'
+            desc: 'Chúc bạn tìm thấy sự an tĩnh trong từng hơi thở, nụ cười luôn đọng nơi khoé mắt và mỗi ngày đều hạnh phúc an yên.'
         },
         {
             icon: '🧁',
             title: 'Ngọt Ngào Mỗi Ngày',
             badge: 'Cuộc Sống Thi Vị',
             quote: 'Cuộc sống là một tách trà, thêm vào nụ cười là ngọt ngào cả ngày dài.',
-            desc: 'Ăn ngon mặc đẹp, ngủ tròn giấc say, luôn có những bất ngờ thú vị chờ đón em ở mỗi sớm mai thức dậy!'
+            desc: 'Ăn ngon mặc đẹp, ngủ tròn giấc say, luôn có những bất ngờ thú vị chờ đón bạn ở mỗi sớm mai thức dậy!'
         },
         {
             icon: '🎯',
             title: 'Thành Công Rực Rỡ',
             badge: 'Thăng Tiến Vượt Trội',
             quote: 'Mỗi giọt mồ hôi hôm nay là viên ngọc sáng lấp lánh cho vương miện ngày mai.',
-            desc: 'Mọi thử thách đều là bệ phóng giúp em khẳng định tài năng và tỏa sáng rạng ngời!'
+            desc: 'Mọi thử thách đều là bệ phóng giúp bạn khẳng định tài năng và tỏa sáng rạng ngời!'
         }
     ];
 
@@ -779,28 +779,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Rich Poetic Wishes for Star Bottle
     const starWishesList = [
         {
-            title: "Dịu Dàng & Yêu Thương",
-            quote: "Mong em luôn rạng rỡ như đóa hồng nhung sớm mai, dịu dàng trong ánh mắt và ngập tràn niềm vui trong tim. Cầu chúc em mỗi ngày trôi qua đều là những ngày được yêu thương đong đầy nhất!",
-            from: "Người luôn hướng về em ✨"
+            title: "Dịu Dàng & Tươi Vui",
+            quote: "Mong bạn luôn rạng rỡ như đóa hồng nhung sớm mai, dịu dàng trong ánh mắt và ngập tràn niềm vui trong tim. Cầu chúc bạn mỗi ngày trôi qua đều là những ngày vui vẻ, bình an nhất!",
+            from: "Một người bạn chân thành ✨"
         },
         {
             title: "Tỏa Sáng Ngọt Ngào",
-            quote: "Em không cần phải trở thành một ai khác, bởi chính sự chân thành, nụ cười duyên dáng và nét đáng yêu của em đã là điều tuyệt vời nhất. Chúc em luôn hạnh phúc và an vui!",
-            from: "Gửi tặng em 💖"
+            quote: "Bạn không cần phải trở thành một ai khác, bởi chính sự chân thành, nụ cười duyên dáng và nét đáng yêu của bạn đã là điều tuyệt vời nhất. Chúc bạn luôn hạnh phúc và an vui!",
+            from: "Gửi tặng bạn 💖"
         },
         {
             title: "Bình An & An Nhiên",
-            quote: "Giữa cuộc sống bộn bề, mong em luôn tìm thấy sự an yên, dịu ngọt. Nụ cười luôn nở trên môi, đêm về ngủ thật ngon giấc, sớm mai thức dậy ngập tràn năng lượng tươi vui!",
+            quote: "Giữa cuộc sống bộn bề, mong bạn luôn tìm thấy sự an yên, dịu ngọt. Nụ cười luôn nở trên môi, đêm về ngủ thật ngon giấc, sớm mai thức dậy ngập tràn năng lượng tươi vui!",
             from: "Vầng Trăng Dịu Dàng 🌙"
         },
         {
-            title: "Trân Quý Nụ Cười Em",
-            quote: "Cảm ơn vì sự hiện diện ấm áp và nụ cười rạng rỡ của em. Chúc ngày 20/10 của em ngập tràn hoa thơm, niềm vui bất ngờ và những điều ngọt ngào nhất!",
+            title: "Trân Quý Nụ Cười Bạn",
+            quote: "Cảm ơn vì sự hiện diện ấm áp và nụ cười rạng rỡ của bạn. Chúc ngày 20/10 của bạn ngập tràn hoa thơm, niềm vui bất ngờ và những điều tốt đẹp nhất!",
             from: "Đóa Hồng Thần Tiên 🌹"
         },
         {
             title: "Vạn Sự Cát Tường",
-            quote: "Mỗi bước chân em đi đều ngập tràn may mắn, mọi điều em ấp ủ đều thuận buồm xuôi gió. Chúc em luôn là đóa hoa xinh tươi, rực rỡ và hạnh phúc theo cách của riêng mình!",
+            quote: "Mỗi bước chân bạn đi đều ngập tràn may mắn, mọi điều bạn ấp ủ đều thuận buồm xuôi gió. Chúc bạn luôn là đóa hoa xinh tươi, rực rỡ và hạnh phúc theo cách của riêng mình!",
             from: "Ánh Sao Băng 🌠"
         }
     ];
@@ -816,10 +816,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (customWish) {
             wishScrollTarget.innerHTML = `
-                <div class="wish-scroll-title">💌 Bức Thư Bí Mật Dành Riêng Cho Em</div>
+                <div class="wish-scroll-title">💌 Bức Thư Bí Mật Dành Riêng Cho Bạn</div>
                 <p style="margin-bottom: 12px; font-weight: 600; color: #8c263e;">Gửi: ${recipientName} 🌹</p>
                 <p style="font-size: 1.05rem; line-height: 1.75;">${decodeURIComponent(customWish)}</p>
-                <div class="wish-scroll-from">— Ký tên: ${customFrom ? decodeURIComponent(customFrom) : 'Người thương gửi tặng'} ✨</div>
+                <div class="wish-scroll-from">— Ký tên: ${customFrom ? decodeURIComponent(customFrom) : 'Một người bạn gửi tặng'} ✨</div>
             `;
             return;
         }
