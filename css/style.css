@@ -144,6 +144,16 @@ body.cinematic-active .cinematic-subtitles {
     height: 100%;
     z-index: 2;
     cursor: grab;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 1.8s ease-in-out, visibility 1.8s;
+}
+
+#flower-3d-container.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 #flower-3d-container:active {

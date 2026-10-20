@@ -178,12 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
     createOriginalFallingHearts(45);
     startMeteors();
 
+    const flowerContainer = document.getElementById('flower-3d-container');
+
     // --- Automatic Cinematic Sequence ---
     function playCinematicSequence() {
         clearStoryTimeouts();
         isStoryPlaying = true;
 
-        // UI Reset
+        // UI Reset: Ensure 3D flower is completely hidden during intro & story scenes!
+        if (flowerContainer) flowerContainer.classList.remove('visible');
         if (startScreen) startScreen.classList.add('hidden');
         if (stageGarden) stageGarden.classList.remove('active');
         if (storyOverlay) storyOverlay.classList.remove('hidden');
@@ -260,6 +263,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startScreen) startScreen.classList.add('hidden');
         if (btnSkipStory) btnSkipStory.classList.add('hidden');
         if (btnReplayStory) btnReplayStory.classList.remove('hidden');
+
+        // Show the 3D Rose Garden smoothly!
+        if (flowerContainer) {
+            flowerContainer.classList.add('visible');
+        }
 
         if (stageGarden) {
             stageGarden.classList.add('active');
