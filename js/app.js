@@ -18,11 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     recipientName = decodeURIComponent(recipientName).trim();
 
     // Elements
-    const introStage = document.getElementById('stage-intro');
-    const gardenStage = document.getElementById('stage-garden');
-    const openGiftBtn = document.getElementById('btn-open-gift');
     const recipientDisplays = document.querySelectorAll('.dynamic-recipient');
-    const celebrationOverlay = document.getElementById('celebration-overlay');
 
     // Update Recipient Displays
     function updateRecipientDisplays(name) {
@@ -110,54 +106,346 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateVisualizer();
 
-    // 4. ✨ Open Gift Box Ceremony
-    if (openGiftBtn) {
-        openGiftBtn.addEventListener('click', () => {
-            if (window.soundEngine) {
-                window.soundEngine.playGiftOpen();
-                window.soundEngine.startMusic();
-                updateMusicUI(true);
+    // ==========================================================================
+    // 4. 🎬 SCENE DIRECTOR CONTROLLER (5-SCENE NARRATIVE JOURNEY)
+    // ==========================================================================
+    let currentScene = 1;
+    const totalScenes = 5;
+    let autoStoryTimer = null;
+    let fallingHeartsInterval = null;
+    let loveBubblesInterval = null;
+    let hasFlowerBloomed = false;
+
+    const scenePanes = {
+        1: document.getElementById('scene-1'),
+        2: document.getElementById('scene-2'),
+        3: document.getElementById('scene-3'),
+        4: document.getElementById('stage-garden'),
+        5: document.getElementById('scene-5')
+    };
+
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const btnPrevScene = document.getElementById('btn-prev-scene');
+    const btnNextScene = document.getElementById('btn-next-scene');
+    const btnAutoStory = document.getElementById('btn-auto-story');
+    const autoStoryIcon = document.getElementById('auto-story-icon');
+    const autoStoryLabel = document.getElementById('auto-story-label');
+
+    // --- Audio Unlock Helper ---
+    function ensureAudioStarted() {
+        if (window.soundEngine && !window.soundEngine.isPlaying && !window.soundEngine.isMuted) {
+            window.soundEngine.startMusic();
+            updateMusicUI(true);
+        }
+    }
+
+    // --- Scene 1: Falling Hearts Generator ---
+    const heartsContainer = document.getElementById('hearts-container');
+    const heartSymbols = ['💖', '💕', '💗', '💓', '🌸', '✨', '💐', '🌹'];
+
+    function spawnFallingHeart() {
+        if (!heartsContainer || currentScene !== 1) return;
+        const heart = document.createElement('div');
+        heart.className = 'falling-heart';
+        heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+        const left = Math.random() * 94 + 3;
+        const size = 1.0 + Math.random() * 1.5;
+        const duration = 4.0 + Math.random() * 4.0;
+        heart.style.left = `${left}%`;
+        heart.style.fontSize = `${size}rem`;
+        heart.style.animationDuration = `${duration}s`;
+        heartsContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), duration * 1000);
+    }
+
+    function startFallingHearts() {
+        if (fallingHeartsInterval) clearInterval(fallingHeartsInterval);
+        for (let i = 0; i < 7; i++) {
+            setTimeout(spawnFallingHeart, i * 220);
+        }
+        fallingHeartsInterval = setInterval(spawnFallingHeart, 420);
+    }
+
+    function stopFallingHearts() {
+        if (fallingHeartsInterval) {
+            clearInterval(fallingHeartsInterval);
+            fallingHeartsInterval = null;
+        }
+        if (heartsContainer) {
+            heartsContainer.innerHTML = '';
+        }
+    }
+
+    // --- Scene 2: Floating Love Bubbles Generator ---
+    const loveBubblesContainer = document.getElementById('love-bubbles-container');
+    const bubbleIcons = ['💖', '🌸', '💌', '✨', '🌹', '💕', '💎'];
+
+    function spawnLoveBubble() {
+        if (!loveBubblesContainer || currentScene !== 2) return;
+        const bubble = document.createElement('div');
+        bubble.className = 'love-bubble';
+        const icon = bubbleIcons[Math.floor(Math.random() * bubbleIcons.length)];
+        bubble.innerHTML = icon;
+        const size = 36 + Math.random() * 32;
+        const left = 5 + Math.random() * 90;
+        const duration = 4.8 + Math.random() * 4.2;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${left}%`;
+        bubble.style.animationDuration = `${duration}s`;
+        bubble.style.fontSize = `${size * 0.44}px`;
+        loveBubblesContainer.appendChild(bubble);
+        setTimeout(() => bubble.remove(), duration * 1000);
+    }
+
+    function startLoveBubbles() {
+        if (loveBubblesInterval) clearInterval(loveBubblesInterval);
+        for (let i = 0; i < 6; i++) {
+            setTimeout(spawnLoveBubble, i * 250);
+        }
+        loveBubblesInterval = setInterval(spawnLoveBubble, 520);
+    }
+
+    function stopLoveBubbles() {
+        if (loveBubblesInterval) {
+            clearInterval(loveBubblesInterval);
+            loveBubblesInterval = null;
+        }
+        if (loveBubblesContainer) {
+            loveBubblesContainer.innerHTML = '';
+        }
+    }
+
+    // --- Core Scene Transition Function ---
+    function goToScene(targetScene, userInitiated = false) {
+        targetScene = Math.max(1, Math.min(totalScenes, targetScene));
+
+        // Ensure background audio starts on user action
+        if (userInitiated) {
+            ensureAudioStarted();
+        }
+
+        // Clean up previous scenes
+        stopFallingHearts();
+        stopLoveBubbles();
+        if (particleEngine) {
+            particleEngine.autoFireworksEnabled = false;
+        }
+
+        // Switch active scene panes
+        Object.keys(scenePanes).forEach(sceneNum => {
+            const pane = scenePanes[sceneNum];
+            if (!pane) return;
+            const num = parseInt(sceneNum);
+            if (num === targetScene) {
+                pane.classList.add('active');
+            } else {
+                pane.classList.remove('active');
             }
+        });
 
-            if (window.confetti) {
-                window.confetti({
-                    particleCount: 110,
-                    spread: 95,
-                    origin: { y: 0.6 },
-                    colors: ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd700', '#ffffff', '#e8ba5d']
-                });
+        // Update Timeline Stepper UI
+        timelineSteps.forEach(step => {
+            const stepNum = parseInt(step.dataset.scene);
+            step.classList.toggle('active', stepNum === targetScene);
+        });
+
+        currentScene = targetScene;
+
+        // Perform scene-specific enhancements
+        if (targetScene === 1) {
+            startFallingHearts();
+        } else if (targetScene === 2) {
+            startLoveBubbles();
+            if (window.soundEngine) window.soundEngine.playSparkle();
+        } else if (targetScene === 3) {
+            // Grand Fireworks celebration
+            if (particleEngine) {
+                particleEngine.autoFireworksEnabled = true;
+                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.3, window.innerHeight * 0.25, 350), 200);
+                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.7, window.innerHeight * 0.22, 45), 800);
+                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.5, window.innerHeight * 0.18, 330), 1500);
+                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.8, window.innerHeight * 0.28, 280), 2200);
+
+                setTimeout(() => particleEngine.releaseSkyLantern(`Chúc ${recipientName} 20/10 Rực Rỡ 💖`), 700);
+                setTimeout(() => particleEngine.releaseSkyLantern("Luôn Xinh Đẹp & Hạnh Phúc ✨"), 1400);
+                setTimeout(() => particleEngine.releaseSkyLantern("Vạn Sự Cát Tường 🌸"), 2100);
             }
-
-            celebrationOverlay.classList.add('active');
-            particleEngine.autoFireworksEnabled = true;
-
-            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.3, window.innerHeight * 0.25, 350), 300);
-            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.7, window.innerHeight * 0.22, 45), 900);
-            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.5, window.innerHeight * 0.18, 330), 1600);
-            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.8, window.innerHeight * 0.30, 280), 2300);
-
-            setTimeout(() => particleEngine.releaseSkyLantern(`Chúc ${recipientName} 20/10 Rực Rỡ 💖`), 800);
-            setTimeout(() => particleEngine.releaseSkyLantern("Luôn Xinh Đẹp & Hạnh Phúc ✨"), 1500);
-            setTimeout(() => particleEngine.releaseSkyLantern("Vạn Sự Cát Tường 🌸"), 2200);
-
-            introStage.classList.add('fade-out');
-
-            setTimeout(() => {
+        } else if (targetScene === 4) {
+            // 3D Rose Garden
+            if (!hasFlowerBloomed && flowerEngine) {
                 flowerEngine.startBloomAnimation();
-            }, 1000);
+                hasFlowerBloomed = true;
+            }
+            showToast("🌹 Chạm vào cánh hoa để đàn Tình Ca hoặc ngắm bướm dạ quang!");
+        } else if (targetScene === 5) {
+            // Memory Hub
+            if (window.soundEngine) window.soundEngine.playCrystalChime();
+        }
+    }
+    window.goToScene = goToScene;
 
-            setTimeout(() => {
-                introStage.style.display = 'none';
-                celebrationOverlay.classList.remove('active');
-                gardenStage.classList.add('active');
-                particleEngine.autoFireworksEnabled = false;
+    // --- Setup Timeline Stepper Clicks ---
+    timelineSteps.forEach(step => {
+        step.addEventListener('click', () => {
+            const target = parseInt(step.dataset.scene);
+            goToScene(target, true);
+        });
+    });
 
-                setTimeout(() => {
-                    openModal('modal-letter');
-                }, 1400);
-            }, 3600);
+    if (btnPrevScene) {
+        btnPrevScene.addEventListener('click', () => {
+            goToScene(currentScene - 1, true);
         });
     }
+
+    if (btnNextScene) {
+        btnNextScene.addEventListener('click', () => {
+            goToScene(currentScene + 1, true);
+        });
+    }
+
+    // --- Auto Story Play / Pause ---
+    function toggleAutoStory() {
+        if (autoStoryTimer) {
+            clearInterval(autoStoryTimer);
+            autoStoryTimer = null;
+            if (btnAutoStory) btnAutoStory.classList.remove('running');
+            if (autoStoryIcon) autoStoryIcon.textContent = '▶';
+            if (autoStoryLabel) autoStoryLabel.textContent = 'Tự Động';
+            showToast("⏸ Đã tạm dừng trình chiếu tự động");
+        } else {
+            ensureAudioStarted();
+            if (btnAutoStory) btnAutoStory.classList.add('running');
+            if (autoStoryIcon) autoStoryIcon.textContent = '⏸';
+            if (autoStoryLabel) autoStoryLabel.textContent = 'Tạm Dừng';
+            showToast("▶ Bắt đầu trình chiếu tự động 5 cảnh lãng mạn...");
+
+            autoStoryTimer = setInterval(() => {
+                const next = currentScene >= totalScenes ? 1 : currentScene + 1;
+                goToScene(next, false);
+            }, 8500);
+        }
+    }
+
+    if (btnAutoStory) {
+        btnAutoStory.addEventListener('click', toggleAutoStory);
+    }
+
+    // --- Scene 1 CTA ---
+    const btnStartJourney = document.getElementById('btn-start-journey');
+    if (btnStartJourney) {
+        btnStartJourney.addEventListener('click', () => {
+            ensureAudioStarted();
+            if (window.soundEngine) window.soundEngine.playSparkle();
+            goToScene(2, true);
+        });
+    }
+
+    // Clicking anywhere on Scene 1 unlocks audio
+    const scene1 = document.getElementById('scene-1');
+    if (scene1) {
+        scene1.addEventListener('click', (e) => {
+            if (btnStartJourney && (e.target === btnStartJourney || btnStartJourney.contains(e.target))) return;
+            ensureAudioStarted();
+        });
+    }
+
+    // --- Scene 2 Gift Box Opening ---
+    const openGiftBtn = document.getElementById('btn-open-gift');
+    const giftBoxClick = document.getElementById('gift-box-click');
+
+    function performGiftUnbox() {
+        ensureAudioStarted();
+        if (window.soundEngine) {
+            window.soundEngine.playGiftOpen();
+        }
+        if (window.confetti) {
+            window.confetti({
+                particleCount: 120,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd700', '#ffffff', '#e8ba5d']
+            });
+        }
+        setTimeout(() => {
+            goToScene(3, true);
+        }, 650);
+    }
+
+    if (openGiftBtn) openGiftBtn.addEventListener('click', performGiftUnbox);
+    if (giftBoxClick) giftBoxClick.addEventListener('click', performGiftUnbox);
+
+    // --- Scene 3 CTA (To 3D Garden) ---
+    const btnGotoGarden = document.getElementById('btn-goto-garden');
+    if (btnGotoGarden) {
+        btnGotoGarden.addEventListener('click', () => {
+            goToScene(4, true);
+        });
+    }
+
+    // --- Scene 4 CTA (From Garden Dock to Hub) ---
+    const btnGotoHub = document.getElementById('btn-goto-hub');
+    if (btnGotoHub) {
+        btnGotoHub.addEventListener('click', () => {
+            goToScene(5, true);
+        });
+    }
+
+    // --- Scene 5 Hub Actions & Navigation ---
+    const btnBackToGarden = document.getElementById('btn-back-to-garden');
+    if (btnBackToGarden) {
+        btnBackToGarden.addEventListener('click', () => {
+            goToScene(4, true);
+        });
+    }
+
+    const btnReplayJourney = document.getElementById('btn-replay-journey');
+    if (btnReplayJourney) {
+        btnReplayJourney.addEventListener('click', () => {
+            goToScene(1, true);
+            showToast("↺ Đã bắt đầu lại hành trình 20/10!");
+        });
+    }
+
+    // Scene 5 Hub Cards
+    const hubCardLetter = document.getElementById('hub-card-letter');
+    if (hubCardLetter) {
+        hubCardLetter.addEventListener('click', () => openModal('modal-letter'));
+    }
+
+    const hubCardBottle = document.getElementById('hub-card-bottle');
+    if (hubCardBottle) {
+        hubCardBottle.addEventListener('click', () => {
+            if (window.openWishBottleModal) window.openWishBottleModal();
+            else openModal('modal-wish-bottle');
+        });
+    }
+
+    const hubCardTarot = document.getElementById('hub-card-tarot');
+    if (hubCardTarot) {
+        hubCardTarot.addEventListener('click', () => {
+            openModal('modal-fortune');
+            if (window.initFortuneCards) window.initFortuneCards();
+        });
+    }
+
+    const hubCardLantern = document.getElementById('hub-card-lantern');
+    if (hubCardLantern) {
+        hubCardLantern.addEventListener('click', () => openModal('modal-lantern'));
+    }
+
+    const hubCardPolaroid = document.getElementById('hub-card-polaroid');
+    if (hubCardPolaroid) {
+        hubCardPolaroid.addEventListener('click', () => {
+            if (window.soundEngine) window.soundEngine.playCameraShutter();
+            if (window.generatePolaroidPhoto) window.generatePolaroidPhoto();
+            openModal('modal-polaroid');
+        });
+    }
+
+    // Initialize Scene 1 Falling Hearts on start
+    startFallingHearts();
 
     // 5. Modal Management
     const modals = document.querySelectorAll('.modal-overlay');
@@ -325,6 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillText('🌸', w - 45, 645);
         };
     }
+    window.generatePolaroidPhoto = generatePolaroidPhoto;
 
     if (btnDownloadPolaroid && polaroidCanvas) {
         btnDownloadPolaroid.addEventListener('click', () => {

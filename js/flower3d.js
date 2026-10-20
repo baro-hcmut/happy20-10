@@ -1468,6 +1468,9 @@ class Flower3DEngine {
 
     bindEvents() {
         const dom = this.renderer.domElement;
+        let startClientX = 0;
+        let startClientY = 0;
+        let hasDragged = false;
 
         const onStart = (clientX, clientY) => {
             if (this.isCinematicMode) {
@@ -1476,6 +1479,9 @@ class Flower3DEngine {
             this.isPointerDown = true;
             this.pointerStartX = clientX;
             this.pointerStartY = clientY;
+            startClientX = clientX;
+            startClientY = clientY;
+            hasDragged = false;
         };
 
         const onMove = (clientX, clientY) => {
@@ -1495,6 +1501,10 @@ class Flower3DEngine {
             const deltaY = clientY - this.pointerStartY;
             this.pointerStartX = clientX;
             this.pointerStartY = clientY;
+
+            if (Math.hypot(clientX - startClientX, clientY - startClientY) > 5) {
+                hasDragged = true;
+            }
 
             this.targetRotationY += deltaX * 0.007;
             this.targetRotationX += deltaY * 0.005;
@@ -1530,8 +1540,24 @@ class Flower3DEngine {
             this.targetZoom = Math.max(2.2, Math.min(5.5, this.targetZoom));
         }, { passive: false });
 
+        // Helper to find ancestor userData
+        const findFeatureData = (obj, key) => {
+            let curr = obj;
+            while (curr && curr !== this.scene) {
+                if (curr.userData && curr.userData[key]) return curr.userData;
+                curr = curr.parent;
+            }
+            return null;
+        };
+
         // 🌟 Raycasting Click across Petals, Butterflies, Wish Bottle, and Water Sanctuary!
         dom.addEventListener('click', (e) => {
+            // CRITICAL BUG FIX: If user was dragging / rotating camera, do NOT trigger click action!
+            if (hasDragged) {
+                hasDragged = false;
+                return;
+            }
+
             const rect = dom.getBoundingClientRect();
             this.mouseVector.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
             this.mouseVector.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
@@ -1545,7 +1571,8 @@ class Flower3DEngine {
                 const hitObj = hit.object;
 
                 // 1. Click on 3D Floating Crystal Wish Bottle
-                if (hitObj.userData && hitObj.userData.isWishBottle) {
+                const wishBottleData = findFeatureData(hitObj, 'isWishBottle');
+                if (wishBottleData) {
                     if (window.soundEngine) window.soundEngine.playCrystalChime();
                     if (window.openWishBottleModal) window.openWishBottleModal();
                     this.spawn3DPetalFlakes(hit.point, 16);
@@ -1554,9 +1581,10 @@ class Flower3DEngine {
                 }
 
                 // 2. Click on 3D Luminous Butterfly
-                if (hitObj.userData && hitObj.userData.isButterfly) {
-                    if (hitObj.userData.butterflyRef) {
-                        hitObj.userData.butterflyRef.triggerAcrobaticLoop();
+                const butterflyData = findFeatureData(hitObj, 'isButterfly');
+                if (butterflyData) {
+                    if (butterflyData.butterflyRef) {
+                        butterflyData.butterflyRef.triggerAcrobaticLoop();
                     }
                     if (window.soundEngine) window.soundEngine.playFairyHarp();
                     if (window.showToast) window.showToast("🦋 Chú bướm dạ quang gửi tặng bạn muôn điều diệu kỳ!");
@@ -1566,7 +1594,8 @@ class Flower3DEngine {
                 }
 
                 // 3. Click on Midnight Water Sanctuary Surface
-                if (hitObj.userData && hitObj.userData.isWater) {
+                const waterData = findFeatureData(hitObj, 'isWater');
+                if (waterData) {
                     if (window.soundEngine) window.soundEngine.playWaterDrop();
                     this.spawnWaterRipple(hit.point.x, hit.point.z, 2.2);
                     if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
@@ -1574,8 +1603,9 @@ class Flower3DEngine {
                 }
 
                 // 4. Click on 3D Velvet Petal
-                if (hitObj.userData && hitObj.userData.isPetal) {
-                    const idx = hitObj.userData.petalIndex || 0;
+                const petalData = findFeatureData(hitObj, 'isPetal');
+                if (petalData) {
+                    const idx = petalData.petalIndex || 0;
 
                     // Play next note of iconic song melody or harmonic chord!
                     if (window.soundEngine) {

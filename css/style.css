@@ -386,63 +386,446 @@ body.cinematic-active .cinematic-subtitles {
 }
 
 /* ==========================================================================
-   CELEBRATION OVERLAY BANNER
+   SCENE DIRECTOR TIMELINE BAR
    ========================================================================== */
-.celebration-overlay {
+.scene-timeline-bar {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(14, 9, 22, 0.85);
+    border: 1px solid var(--glass-border-gold);
+    border-top: 1px solid rgba(255, 240, 200, 0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 999px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.timeline-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.timeline-nav-btn:hover {
+    background: var(--rose-primary);
+    border-color: var(--gold-primary);
+    transform: scale(1.1);
+}
+
+.timeline-steps {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.timeline-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: var(--font-body);
+    font-size: 0.80rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.timeline-step .step-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.timeline-step:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.timeline-step.active {
+    background: linear-gradient(135deg, rgba(230, 43, 90, 0.75), rgba(245, 207, 123, 0.65));
+    border-color: var(--gold-primary);
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(230, 43, 90, 0.4);
+}
+
+.timeline-step.active .step-num {
+    background: #ffffff;
+    color: #b4183d;
+}
+
+.timeline-auto-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(245, 207, 123, 0.15);
+    border: 1px solid var(--gold-primary);
+    color: var(--gold-light);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.timeline-auto-btn:hover, .timeline-auto-btn.running {
+    background: var(--gold-primary);
+    color: #1a0f02;
+    box-shadow: 0 0 14px rgba(245, 207, 123, 0.6);
+}
+
+/* ==========================================================================
+   SCENE PANES GENERAL
+   ========================================================================== */
+.scene-pane {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 15;
-    pointer-events: none;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    padding: 24px;
+    z-index: 10;
+    pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease;
+    transform: scale(0.96);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.8s,
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.celebration-overlay.active {
+.scene-pane.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+    transform: scale(1);
 }
 
-.celebration-banner {
+.scene-content {
+    max-width: 860px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    padding: 28px 42px;
-    border-radius: 30px;
-    background: rgba(14, 9, 22, 0.82);
-    border: 1px solid var(--glass-border-gold);
-    backdrop-filter: blur(16px);
-    box-shadow: var(--glass-shadow);
-    transform: scale(0.9);
-    animation: bannerPop 3.2s ease forwards;
+    z-index: 2;
 }
 
-@keyframes bannerPop {
-    0% { transform: scale(0.8); opacity: 0; }
-    20% { transform: scale(1.06); opacity: 1; }
-    30% { transform: scale(1); opacity: 1; }
-    80% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(0.95); opacity: 0; }
-}
-
-.celebration-banner h2 {
+.scene-title-gradient {
     font-family: var(--font-serif);
-    font-size: clamp(2.2rem, 4.8vw, 3.4rem);
+    font-size: clamp(2.0rem, 4.5vw, 3.4rem);
+    background: linear-gradient(135deg, #ffffff 10%, #ffe0e9 40%, #ffd700 85%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.25;
+    margin: 16px 0;
+    text-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
+}
+
+.scene-heading-script {
+    font-family: var(--font-script);
+    font-size: clamp(1.8rem, 3.8vw, 2.6rem);
+    color: var(--rose-light);
+    margin-bottom: 24px;
+    text-shadow: 0 0 15px rgba(255, 141, 161, 0.6);
+}
+
+.scene-subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(1.0rem, 1.8vw, 1.25rem);
+    color: rgba(255, 240, 245, 0.85);
+    max-width: 650px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.scene-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-primary-glow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 34px;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #e62b5a, #c71f49 50%, #d4af37 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(230, 43, 90, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-primary-glow:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 12px 36px rgba(230, 43, 90, 0.7), 0 0 30px rgba(212, 175, 55, 0.5);
+}
+
+/* ==========================================================================
+   SCENE 1: FALLING HEARTS ANIMATION
+   ========================================================================== */
+.hearts-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.falling-heart {
+    position: absolute;
+    top: -40px;
+    color: #ff6b8b;
+    font-size: 1.5rem;
+    animation: fallAndFade linear infinite;
+    filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.7));
+}
+
+@keyframes fallAndFade {
+    0% { transform: translateY(-40px) rotate(0deg) scale(0.6); opacity: 0; }
+    15% { opacity: 0.9; }
+    85% { opacity: 0.8; }
+    100% { transform: translateY(105vh) rotate(360deg) scale(1.1); opacity: 0; }
+}
+
+/* ==========================================================================
+   SCENE 2: LOVE BUBBLES
+   ========================================================================== */
+.love-bubbles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.love-bubble {
+    position: absolute;
+    bottom: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 141, 161, 0.4) 60%, rgba(255, 77, 121, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 16px rgba(255, 141, 161, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    animation: floatBubbleUp linear infinite;
+}
+
+@keyframes floatBubbleUp {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    20% { opacity: 0.85; }
+    80% { opacity: 0.75; }
+    100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+}
+
+/* ==========================================================================
+   SCENE 3: CELEBRATION FIREWORKS CARD
+   ========================================================================== */
+.fireworks-banner-card {
+    background: rgba(14, 9, 22, 0.85);
+    border: 1px solid var(--glass-border-gold);
+    border-top: 1px solid rgba(255, 240, 200, 0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: 36px 42px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 30px rgba(245, 207, 123, 0.25);
+    margin-bottom: 28px;
+    max-width: 720px;
+    animation: bannerPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes bannerPopIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.fireworks-sparkle-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    background: rgba(245, 207, 123, 0.15);
+    border: 1px solid var(--gold-primary);
+    border-radius: 999px;
+    color: var(--gold-primary);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.fireworks-big-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    line-height: 1.15;
+    margin-bottom: 14px;
+}
+
+.fireworks-quote {
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    color: #fdf2f4;
+    line-height: 1.6;
+}
+
+.gold-text {
+    color: var(--gold-primary);
+}
+
+/* ==========================================================================
+   SCENE 5: MEMORY & CELEBRATION HUB
+   ========================================================================== */
+.memory-hub-scene {
+    overflow-y: auto;
+}
+
+.memory-hub-content {
+    max-width: 980px;
+    padding: 60px 16px 40px;
+}
+
+.memory-hub-header {
+    margin-bottom: 28px;
+}
+
+.memory-sub {
+    font-size: 0.98rem;
+    color: rgba(255, 240, 245, 0.75);
+}
+
+.memory-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    width: 100%;
+}
+
+.hub-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 20px;
+    background: rgba(22, 14, 32, 0.72);
+    border: 1px solid var(--glass-border);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hub-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--gold-primary);
+    background: rgba(35, 20, 50, 0.85);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(245, 207, 123, 0.3);
+}
+
+.hub-icon {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+}
+
+.hub-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--gold-light);
     margin-bottom: 8px;
 }
 
-.celebration-banner p {
-    font-family: var(--font-script);
-    font-size: clamp(1.5rem, 3.2vw, 2.2rem);
-    color: var(--rose-light);
+.hub-card p {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    flex-grow: 1;
+}
+
+.hub-card-btn {
+    padding: 6px 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.hub-card:hover .hub-card-btn {
+    background: var(--rose-primary);
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 12px var(--rose-glow);
+}
+
+/* ==========================================================================
+   POLAROID RESPONSIVE BUG FIX
+   ========================================================================== */
+.polaroid-frame-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+#polaroid-canvas {
+    max-width: 100%;
+    max-height: 60vh;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
 }
 
 /* ==========================================================================
@@ -461,9 +844,12 @@ body.cinematic-active .cinematic-subtitles {
     transition: opacity 1.5s ease;
 }
 
-.stage-garden.active {
+.stage-garden.active,
+.stage-garden.scene-pane.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: none !important;
+    transform: none;
 }
 
 /* Floating Top Bar */
@@ -1653,5 +2039,34 @@ body.cinematic-active .cinematic-subtitles {
 
     .fortune-cards-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Scene Director Bar Mobile Optimization */
+    .scene-timeline-bar {
+        top: 10px;
+        padding: 4px 8px;
+        gap: 4px;
+        max-width: 95vw;
+    }
+
+    .timeline-step {
+        padding: 4px 8px;
+    }
+
+    .timeline-step .step-name {
+        display: none;
+    }
+
+    .timeline-step.active .step-name {
+        display: inline;
+        font-size: 0.72rem;
+    }
+
+    .timeline-auto-btn #auto-story-label {
+        display: none;
+    }
+
+    .timeline-auto-btn {
+        padding: 5px 8px;
     }
 }
