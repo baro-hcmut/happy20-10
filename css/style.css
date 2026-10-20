@@ -1,0 +1,1106 @@
+/* ==========================================================================
+   🌹 20/10 ENCHANTED TWILIGHT GARDEN - MODERN LUXURY DESIGN SYSTEM
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,400;1,600&display=swap');
+
+:root {
+    --bg-dark: #07070b;
+    --bg-gradient: radial-gradient(circle at 50% 30%, #170d24 0%, #0c0814 55%, #050408 100%);
+    
+    --gold-primary: #f5cf7b;
+    --gold-light: #fff0be;
+    --gold-gradient: linear-gradient(135deg, #fff2be 0%, #e8ba5d 50%, #c49332 100%);
+    
+    --rose-primary: #ff4d79;
+    --rose-light: #ff8fab;
+    --rose-dark: #b81d4a;
+    --rose-glow: rgba(255, 77, 121, 0.45);
+    
+    --glass-bg: rgba(18, 14, 26, 0.65);
+    --glass-bg-hover: rgba(28, 22, 40, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-border-gold: rgba(245, 207, 123, 0.35);
+    --glass-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 77, 121, 0.15);
+    
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-script: 'Dancing Script', cursive;
+    --font-body: 'Montserrat', sans-serif;
+    --font-elegant: 'Cormorant Garamond', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    background-image: var(--bg-gradient);
+    font-family: var(--font-body);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   CANVAS LAYERS
+   ========================================================================== */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#flower-3d-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    cursor: grab;
+}
+
+#flower-3d-container:active {
+    cursor: grabbing;
+}
+
+/* ==========================================================================
+   STAGE 1: INTRO CEREMONY (GIFT BOX)
+   ========================================================================== */
+.stage-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: radial-gradient(circle at center, rgba(16, 10, 24, 0.8) 0%, rgba(5, 3, 8, 0.95) 100%);
+    backdrop-filter: blur(8px);
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+}
+
+.stage-intro.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.intro-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 680px;
+    animation: fadeInIntro 1.6s ease-out forwards;
+}
+
+@keyframes fadeInIntro {
+    0% { opacity: 0; transform: translateY(24px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    border-radius: 999px;
+    background: rgba(255, 77, 121, 0.12);
+    border: 1px solid rgba(255, 77, 121, 0.35);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(255, 77, 121, 0.2);
+}
+
+.intro-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #ffffff 0%, #ffe6ee 45%, #f5cf7b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    text-shadow: 0 0 35px rgba(255, 77, 121, 0.35);
+}
+
+.intro-recipient {
+    font-family: var(--font-script);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--gold-primary);
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(245, 207, 123, 0.5);
+}
+
+/* --- 3D Glowing Floating Gift Box --- */
+.gift-box-wrapper {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    margin: 20px 0 40px;
+    perspective: 800px;
+    animation: floatGift 4s ease-in-out infinite;
+}
+
+@keyframes floatGift {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+.gift-box-aura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 77, 121, 0.35) 0%, rgba(245, 207, 123, 0.15) 50%, transparent 70%);
+    animation: pulseAura 3s ease-in-out infinite;
+    filter: blur(10px);
+}
+
+@keyframes pulseAura {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+.gift-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #d82b58 0%, #8b1338 100%);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 77, 121, 0.4), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gift-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 45px rgba(255, 77, 121, 0.7);
+}
+
+/* Ribbons */
+.ribbon-vertical {
+    position: absolute;
+    width: 32px;
+    height: 100%;
+    background: var(--gold-gradient);
+    box-shadow: 0 0 12px rgba(245, 207, 123, 0.5);
+}
+
+.ribbon-horizontal {
+    position: absolute;
+    height: 32px;
+    width: 100%;
+    background: var(--gold-gradient);
+    box-shadow: 0 0 12px rgba(245, 207, 123, 0.5);
+}
+
+.ribbon-bow {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bow-loop {
+    width: 38px;
+    height: 28px;
+    border: 6px solid #e8ba5d;
+    border-radius: 50% 50% 10% 10%;
+    background: var(--gold-gradient);
+    box-shadow: 0 0 10px rgba(245, 207, 123, 0.6);
+}
+
+.bow-loop.left {
+    transform: rotate(-35deg) translateX(8px);
+}
+
+.bow-loop.right {
+    transform: rotate(35deg) translateX(-8px);
+}
+
+.bow-center {
+    width: 20px;
+    height: 20px;
+    background: var(--gold-primary);
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Luxury CTA Button */
+.btn-open-gift {
+    position: relative;
+    padding: 16px 42px;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #1a0815;
+    background: var(--gold-gradient);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(245, 207, 123, 0.4), 0 0 20px rgba(255, 77, 121, 0.3);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.btn-open-gift:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 15px 40px rgba(245, 207, 123, 0.6), 0 0 35px rgba(255, 77, 121, 0.5);
+}
+
+.btn-open-gift:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.btn-open-gift::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 40%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.45);
+    transform: rotate(30deg);
+    animation: buttonShine 3.5s infinite;
+}
+
+@keyframes buttonShine {
+    0% { left: -60%; }
+    25%, 100% { left: 140%; }
+}
+
+.intro-hint {
+    margin-top: 18px;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ==========================================================================
+   CELEBRATION OVERLAY BANNER
+   ========================================================================== */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease;
+}
+
+.celebration-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.celebration-banner {
+    text-align: center;
+    padding: 24px 36px;
+    border-radius: 28px;
+    background: rgba(14, 9, 22, 0.75);
+    border: 1px solid var(--glass-border-gold);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--glass-shadow);
+    transform: scale(0.9);
+    animation: bannerPop 3s ease forwards;
+}
+
+@keyframes bannerPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    20% { transform: scale(1.05); opacity: 1; }
+    30% { transform: scale(1); opacity: 1; }
+    80% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0; }
+}
+
+.celebration-banner h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.celebration-banner p {
+    font-family: var(--font-script);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--rose-light);
+}
+
+/* ==========================================================================
+   STAGE 2: INTERACTIVE ENCHANTED GARDEN UI
+   ========================================================================== */
+.stage-garden {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.5s ease;
+}
+
+.stage-garden.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Floating Top Bar --- */
+.garden-top-bar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.brand-icon {
+    font-size: 1.2rem;
+    animation: rotateSlow 12s linear infinite;
+}
+
+@keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.brand-text {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+}
+
+/* Recipient Pill */
+.recipient-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border-gold);
+    backdrop-filter: blur(16px);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.recipient-pill:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--gold-primary);
+}
+
+.recipient-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+}
+
+.recipient-name-tag {
+    color: var(--gold-primary);
+    font-weight: 600;
+}
+
+.btn-icon-edit {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s ease;
+}
+
+.recipient-pill:hover .btn-icon-edit {
+    color: #ffffff;
+}
+
+/* Top Actions (Music, Fullscreen) */
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.glass-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 16px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px);
+    border-radius: 999px;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-btn:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-gold);
+    transform: translateY(-2px);
+    color: var(--gold-light);
+}
+
+.glass-btn.playing {
+    border-color: var(--rose-primary);
+    box-shadow: 0 0 16px var(--rose-glow);
+}
+
+/* Audio Visualizer Equalizer Bars */
+.audio-visualizer {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 16px;
+}
+
+.visualizer-bar {
+    width: 3px;
+    height: 14px;
+    background: var(--gold-primary);
+    border-radius: 2px;
+    transform-origin: bottom;
+    transform: scaleY(0.2);
+    transition: transform 0.1s ease;
+}
+
+/* --- 3D Interaction Orbit Hint --- */
+.orbit-hint {
+    position: absolute;
+    top: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(14, 10, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    font-size: 0.82rem;
+    color: rgba(255, 240, 245, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    animation: pulseHint 3s infinite;
+}
+
+@keyframes pulseHint {
+    0%, 100% { opacity: 0.85; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 0.4; transform: translateX(-50%) translateY(-3px); }
+}
+
+/* ==========================================================================
+   FLOATING BOTTOM DOCK
+   ========================================================================== */
+.garden-bottom-dock {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    border-radius: 999px;
+    box-shadow: var(--glass-shadow);
+    pointer-events: auto;
+    max-width: 95vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.garden-bottom-dock::-webkit-scrollbar {
+    display: none;
+}
+
+.dock-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dock-item:hover {
+    background: rgba(255, 77, 121, 0.2);
+    border-color: rgba(255, 77, 121, 0.5);
+    transform: translateY(-4px) scale(1.03);
+    color: var(--gold-light);
+    box-shadow: 0 8px 20px rgba(255, 77, 121, 0.25);
+}
+
+.dock-item:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.dock-icon {
+    font-size: 1.15rem;
+}
+
+/* Color Palette Popover */
+.color-popover {
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    display: flex;
+    gap: 10px;
+    padding: 12px 18px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border-gold);
+    backdrop-filter: blur(20px);
+    border-radius: 999px;
+    box-shadow: var(--glass-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+}
+
+.color-popover.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.theme-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-btn:hover, .theme-btn.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--gold-primary);
+    transform: scale(1.05);
+}
+
+.color-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+}
+
+/* ==========================================================================
+   MODAL DIALOGUES (PARCHMENT LETTER, FORTUNE CARDS, LANTERNS)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    background: rgba(4, 2, 8, 0.8);
+    backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-card {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 28px;
+    background: rgba(18, 13, 26, 0.92);
+    border: 1px solid var(--glass-border-gold);
+    padding: 36px 32px;
+    box-shadow: var(--glass-shadow);
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .modal-card {
+    transform: scale(1) translateY(0);
+}
+
+.btn-close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-close-modal:hover {
+    background: rgba(255, 77, 121, 0.3);
+    border-color: var(--rose-primary);
+    transform: rotate(90deg);
+}
+
+/* --- 💌 Vintage Parchment Greeting Letter --- */
+.parchment-letter {
+    position: relative;
+    background: radial-gradient(circle at center, #23192d 0%, #17101f 100%);
+    border: 2px solid rgba(245, 207, 123, 0.4);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6), 0 16px 40px rgba(0, 0, 0, 0.8);
+}
+
+.wax-seal-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.wax-seal {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #e62b5a 0%, #9e1136 70%, #68051f 100%);
+    border: 3px solid #ff758f;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 43, 90, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--gold-light);
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.letter-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.letter-title {
+    font-family: var(--font-serif);
+    font-size: 1.7rem;
+    color: var(--gold-primary);
+    margin-bottom: 6px;
+}
+
+.letter-to {
+    font-family: var(--font-script);
+    font-size: 1.8rem;
+    color: var(--rose-light);
+}
+
+.letter-body {
+    font-family: var(--font-elegant);
+    font-size: 1.25rem;
+    line-height: 1.85;
+    color: #f7eef5;
+    margin-bottom: 30px;
+    text-align: justify;
+    padding: 0 10px;
+}
+
+.letter-body p {
+    margin-bottom: 16px;
+    text-indent: 20px;
+}
+
+.letter-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px dashed rgba(245, 207, 123, 0.3);
+    padding-top: 20px;
+    font-size: 0.95rem;
+}
+
+.letter-date {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.letter-signature {
+    font-family: var(--font-script);
+    font-size: 1.5rem;
+    color: var(--gold-primary);
+    text-align: right;
+}
+
+/* --- 🎴 Fortune Cards Grid (Tarot 3D Flip) --- */
+.fortune-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.fortune-header h3 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: var(--gold-primary);
+    margin-bottom: 6px;
+}
+
+.fortune-header p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.fortune-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.tarot-card {
+    height: 230px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.tarot-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 18px;
+}
+
+.tarot-card.flipped .tarot-card-inner {
+    transform: rotateY(180deg);
+}
+
+.tarot-card-back, .tarot-card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Back of Tarot */
+.tarot-card-back {
+    background: linear-gradient(145deg, #1f1430 0%, #11091d 100%);
+    border: 2px solid var(--glass-border-gold);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.tarot-card-back:hover {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 20px rgba(245, 207, 123, 0.4);
+}
+
+.tarot-pattern {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.tarot-number {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.tarot-sigil {
+    font-size: 2.5rem;
+    animation: pulseSigil 2.5s infinite;
+}
+
+@keyframes pulseSigil {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+}
+
+.tarot-label {
+    font-family: var(--font-serif);
+    font-size: 0.85rem;
+    color: var(--gold-primary);
+    letter-spacing: 2px;
+}
+
+/* Front of Tarot */
+.tarot-card-front {
+    background: radial-gradient(circle at 50% 20%, #2b1836 0%, #160c1d 100%);
+    border: 2px solid var(--gold-primary);
+    transform: rotateY(180deg);
+    box-shadow: 0 10px 30px rgba(245, 207, 123, 0.3);
+    justify-content: space-between;
+}
+
+.tarot-badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+    background: rgba(245, 207, 123, 0.15);
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 207, 123, 0.3);
+}
+
+.tarot-icon {
+    font-size: 2.2rem;
+    margin: 4px 0;
+}
+
+.tarot-title {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold-primary);
+    margin-bottom: 4px;
+}
+
+.tarot-quote {
+    font-style: italic;
+    font-size: 0.72rem;
+    color: #ffd6e6;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.tarot-desc {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.35;
+}
+
+/* --- 🏮 Sky Lantern Modal --- */
+.lantern-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 20px 0;
+}
+
+.app-input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.app-input:focus {
+    border-color: var(--gold-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.quick-wishes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.wish-chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255, 77, 121, 0.12);
+    border: 1px solid rgba(255, 77, 121, 0.25);
+    font-size: 0.8rem;
+    color: #ffccd5;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.wish-chip:hover {
+    background: rgba(255, 77, 121, 0.3);
+    border-color: var(--rose-primary);
+    transform: translateY(-2px);
+}
+
+.btn-action-primary {
+    width: 100%;
+    padding: 14px;
+    border-radius: 999px;
+    background: var(--gold-gradient);
+    border: none;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #1a0815;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(245, 207, 123, 0.35);
+    transition: all 0.3s ease;
+}
+
+.btn-action-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(245, 207, 123, 0.5);
+}
+
+/* ==========================================================================
+   APP TOAST NOTIFICATION
+   ========================================================================== */
+.app-toast {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+    background: rgba(24, 16, 34, 0.9);
+    border: 1px solid var(--gold-primary);
+    color: var(--gold-light);
+    padding: 12px 26px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 207, 123, 0.3);
+    backdrop-filter: blur(14px);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.app-toast.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 768px) {
+    .garden-top-bar {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+    }
+
+    .brand-badge {
+        display: none;
+    }
+
+    .orbit-hint {
+        top: 70px;
+        font-size: 0.75rem;
+        padding: 6px 14px;
+    }
+
+    .garden-bottom-dock {
+        bottom: 16px;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .dock-item {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+
+    .modal-card {
+        padding: 24px 20px;
+    }
+
+    .fortune-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
