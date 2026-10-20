@@ -575,7 +575,274 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 9. Toast Notification Helper
+    // ==========================================================================
+    // 9. 🍾 ENCHANTED WISH BOTTLE MANAGER (LỌ THỦY TINH NGUYỆN ƯỚC)
+    // ==========================================================================
+    const btnOpenBottle = document.getElementById('btn-open-bottle');
+    const modalWishBottle = document.getElementById('modal-wish-bottle');
+    const tabBtnRead = document.getElementById('tab-btn-read');
+    const tabBtnWrite = document.getElementById('tab-btn-write');
+    const paneReadWish = document.getElementById('pane-read-wish');
+    const paneWriteWish = document.getElementById('pane-write-wish');
+    const wishScrollTarget = document.getElementById('wish-scroll-target');
+    const btnDrawRandomWish = document.getElementById('btn-draw-random-wish');
+    const btnGotoWriteWish = document.getElementById('btn-goto-write-wish');
+
+    const inputWishTo = document.getElementById('input-wish-to');
+    const inputWishMessage = document.getElementById('input-wish-message');
+    const inputWishFrom = document.getElementById('input-wish-from');
+    const btnSealBottleWish = document.getElementById('btn-seal-bottle-wish');
+    const wishLinkContainer = document.getElementById('wish-link-container');
+    const inputWishGeneratedLink = document.getElementById('input-wish-generated-link');
+    const btnCopyWishLink = document.getElementById('btn-copy-wish-link');
+
+    // Rich Poetic Wishes for Star Bottle
+    const starWishesList = [
+        {
+            title: "Dịu Dàng & Kiêu Hãnh",
+            quote: "Mong bạn luôn rạng rỡ như đóa hồng nhung sớm mai, dịu dàng trong ánh mắt nhưng kiên cường mạnh mẽ trong tâm hồn. Cầu chúc bạn mọi ngày trôi qua đều là những ngày được yêu thương đong đầy nhất!",
+            from: "Tinh Tú Ngân Hà ✨"
+        },
+        {
+            title: "Bản Lĩnh Nữ Hoàng",
+            quote: "Bạn không cần phải trở thành một ai khác, bởi chính phiên bản chân thật, tự tin và kiêu hãnh của bạn đã là tuyệt tác đẹp đẽ nhất. Chúc bạn chạm tới mọi đỉnh cao mà bạn hằng mơ ước!",
+            from: "Ngọn Gió Tự Do 🕊️"
+        },
+        {
+            title: "Bình An & An Nhiên",
+            quote: "Giữa thế gian hối hả, mong bạn luôn tìm thấy một góc an yên trong trái tim mình. Nụ cười luôn hé trên môi, đêm về ngủ thật ngon giấc, sớm mai thức dậy ngập tràn năng lượng tươi vui!",
+            from: "Vầng Trăng Dịu Mát 🌙"
+        },
+        {
+            title: "Trân Quý Nụ Cười Bạn",
+            quote: "Cảm ơn vì sự hiện diện ấm áp và nụ cười tỏa nắng của bạn đã làm cho thế giới này thêm phần ngọt ngào và rực rỡ. Chúc ngày 20/10 ngập tràn quà tặng, hoa thơm và những lời chúc chân thành!",
+            from: "Đóa Hồng Thần Tiên 🌹"
+        },
+        {
+            title: "Vạn Sự Như Ý",
+            quote: "Mỗi bước chân bạn đi đều nở hoa may mắn, mỗi dự định ấp ủ đều hóa thành công. Chúc bạn luôn là bông hoa ngát hương, độc lập, rực rỡ và tỏa sáng theo cách riêng của mình!",
+            from: "Ánh Sao Băng 🌠"
+        }
+    ];
+
+    let currentWishIndex = 0;
+
+    function renderStarWish() {
+        if (!wishScrollTarget) return;
+
+        // Check if there is a custom encoded wish in URL
+        const customWish = urlParams.get('wish');
+        const customFrom = urlParams.get('from');
+
+        if (customWish) {
+            wishScrollTarget.innerHTML = `
+                <div class="wish-scroll-title">💌 Bức Thư Bí Mật Dành Riêng Cho Bạn</div>
+                <p style="margin-bottom: 12px; font-weight: 600; color: #8c263e;">Gửi: ${recipientName} 🌹</p>
+                <p style="font-size: 1.05rem; line-height: 1.75;">${decodeURIComponent(customWish)}</p>
+                <div class="wish-scroll-from">— Ký tên: ${customFrom ? decodeURIComponent(customFrom) : 'Người thương giấu tên'} ✨</div>
+            `;
+            return;
+        }
+
+        const wish = starWishesList[currentWishIndex % starWishesList.length];
+        wishScrollTarget.innerHTML = `
+            <div class="wish-scroll-title">${wish.title}</div>
+            <p style="margin-bottom: 10px; font-weight: 600; color: #8c263e;">Gửi tặng: ${recipientName} 🌹</p>
+            <p>${wish.quote}</p>
+            <div class="wish-scroll-from">— ${wish.from}</div>
+        `;
+    }
+
+    function openWishBottleModal() {
+        renderStarWish();
+        openModal('modal-wish-bottle');
+        if (window.soundEngine) window.soundEngine.playCrystalChime();
+    }
+    window.openWishBottleModal = openWishBottleModal;
+
+    if (btnOpenBottle) {
+        btnOpenBottle.addEventListener('click', openWishBottleModal);
+    }
+
+    // Bottle Tab Switching
+    if (tabBtnRead && tabBtnWrite && paneReadWish && paneWriteWish) {
+        tabBtnRead.addEventListener('click', () => {
+            tabBtnRead.classList.add('active');
+            tabBtnWrite.classList.remove('active');
+            paneReadWish.classList.add('active');
+            paneWriteWish.classList.remove('active');
+        });
+
+        tabBtnWrite.addEventListener('click', () => {
+            tabBtnWrite.classList.add('active');
+            tabBtnRead.classList.remove('active');
+            paneWriteWish.classList.add('active');
+            paneReadWish.classList.remove('active');
+            if (inputWishTo && !inputWishTo.value) inputWishTo.value = recipientName;
+        });
+
+        if (btnGotoWriteWish) {
+            btnGotoWriteWish.addEventListener('click', () => {
+                tabBtnWrite.click();
+            });
+        }
+    }
+
+    if (btnDrawRandomWish) {
+        btnDrawRandomWish.addEventListener('click', () => {
+            currentWishIndex++;
+            renderStarWish();
+            if (window.soundEngine) window.soundEngine.playSparkle();
+        });
+    }
+
+    // Seal Personal Wish into Bottle & Generate Share Link
+    if (btnSealBottleWish) {
+        btnSealBottleWish.addEventListener('click', () => {
+            const toName = (inputWishTo && inputWishTo.value.trim()) || recipientName;
+            const message = (inputWishMessage && inputWishMessage.value.trim());
+            const fromName = (inputWishFrom && inputWishFrom.value.trim()) || 'Một người bạn';
+
+            if (!message) {
+                showToast("Vui lòng nhập lời chúc của bạn trước khi niêm phong nhé! 💖");
+                return;
+            }
+
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.set('to', toName);
+            currentUrl.searchParams.set('wish', message);
+            currentUrl.searchParams.set('from', fromName);
+
+            if (inputWishGeneratedLink && wishLinkContainer) {
+                inputWishGeneratedLink.value = currentUrl.toString();
+                wishLinkContainer.classList.remove('hidden');
+            }
+
+            if (window.confetti) {
+                window.confetti({
+                    particleCount: 70,
+                    spread: 80,
+                    origin: { y: 0.65 },
+                    colors: ['#ffd700', '#ff80ab', '#ffffff', '#e62b5a']
+                });
+            }
+
+            if (window.soundEngine) window.soundEngine.playCrystalChime();
+            showToast("✨ Đã niêm phong lời chúc vào Lọ Thủy Tinh thành công!");
+        });
+    }
+
+    if (btnCopyWishLink && inputWishGeneratedLink) {
+        btnCopyWishLink.addEventListener('click', () => {
+            navigator.clipboard.writeText(inputWishGeneratedLink.value).then(() => {
+                showToast("📋 Đã sao chép link Lọ Ước Nguyện vào bộ nhớ tạm!");
+                if (window.soundEngine) window.soundEngine.playSparkle();
+            }).catch(() => {
+                inputWishGeneratedLink.select();
+                showToast("Đã chọn toàn bộ link, bạn hãy nhấn Ctrl+C để sao chép!");
+            });
+        });
+    }
+
+    // If page is loaded with a secret wish parameter, notify the user with a welcoming hint!
+    if (urlParams.has('wish')) {
+        setTimeout(() => {
+            showToast("💌 Bạn có một bức thư bí mật trong Lọ Thủy Tinh Ước Nguyện!");
+        }, 4200);
+    }
+
+    // ==========================================================================
+    // 10. 🎹 CUNG ĐÀN TÌNH CA (MELODY MODE CONTROLLER)
+    // ==========================================================================
+    const btnMelodyMode = document.getElementById('btn-melody-mode');
+    const melodyPopover = document.getElementById('melody-popover');
+    const melodyBtnLabel = document.getElementById('melody-btn-label');
+
+    if (btnMelodyMode && melodyPopover) {
+        btnMelodyMode.addEventListener('click', (e) => {
+            e.stopPropagation();
+            melodyPopover.classList.toggle('active');
+            if (colorPopover) colorPopover.classList.remove('active');
+            if (window.soundEngine) window.soundEngine.playSparkle();
+        });
+
+        document.addEventListener('click', () => {
+            melodyPopover.classList.remove('active');
+        });
+
+        melodyPopover.addEventListener('click', (e) => e.stopPropagation());
+
+        const songButtons = melodyPopover.querySelectorAll('.song-btn');
+        songButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const songKey = btn.dataset.song;
+                if (window.soundEngine) {
+                    window.soundEngine.setMelodySong(songKey);
+                }
+
+                songButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const songName = btn.querySelector('.song-name').textContent;
+                if (melodyBtnLabel) {
+                    melodyBtnLabel.textContent = songKey === 'freestyle' ? 'Hợp Âm' : 'Tình Ca';
+                }
+
+                melodyPopover.classList.remove('active');
+                showToast(`🎹 Chế độ đàn: ${songName}`);
+            });
+        });
+    }
+
+    // ==========================================================================
+    // 11. 🎚️ BLOOM TIME-TRAVELER SLIDER & CONTROLLER
+    // ==========================================================================
+    const bloomRangeSlider = document.getElementById('bloom-range-slider');
+    const bloomPercentLabel = document.getElementById('bloom-percent-label');
+    const btnBloomBud = document.getElementById('btn-bloom-bud');
+    const btnBloomFull = document.getElementById('btn-bloom-full');
+    const btnBloomAuto = document.getElementById('btn-bloom-auto');
+
+    if (bloomRangeSlider) {
+        bloomRangeSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value) / 100;
+            if (flowerEngine) {
+                flowerEngine.setBloomProgress(val);
+            }
+            if (bloomPercentLabel) {
+                bloomPercentLabel.textContent = `${e.target.value}%`;
+            }
+        });
+    }
+
+    if (btnBloomBud) {
+        btnBloomBud.addEventListener('click', () => {
+            if (bloomRangeSlider) bloomRangeSlider.value = 0;
+            if (bloomPercentLabel) bloomPercentLabel.textContent = '0%';
+            if (flowerEngine) flowerEngine.setBloomProgress(0.0);
+            showToast("🌱 Đóa hoa trở về nụ hoa e ấp");
+        });
+    }
+
+    if (btnBloomFull) {
+        btnBloomFull.addEventListener('click', () => {
+            if (bloomRangeSlider) bloomRangeSlider.value = 100;
+            if (bloomPercentLabel) bloomPercentLabel.textContent = '100%';
+            if (flowerEngine) flowerEngine.startBloomAnimation();
+            showToast("🌹 Đóa hoa bung nở rực rỡ nhất!");
+        });
+    }
+
+    if (btnBloomAuto) {
+        btnBloomAuto.addEventListener('click', () => {
+            if (bloomRangeSlider) bloomRangeSlider.value = 100;
+            if (bloomPercentLabel) bloomPercentLabel.textContent = '100%';
+            if (flowerEngine) flowerEngine.startBloomAnimation();
+            showToast("✨ Đóa hoa bắt đầu tỏa hương ngào ngạt...");
+        });
+    }
+
+    // 12. Toast Notification Helper
     function showToast(message) {
         let toast = document.getElementById('app-toast');
         if (!toast) {
@@ -592,3 +859,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.showToast = showToast;
 });
+

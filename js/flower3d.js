@@ -28,6 +28,18 @@ class Flower3DEngine {
         this.haloMesh = null;
         this.rippleRings = [];
 
+        // 🦋 Living 3D Wildlife & Deep Environment
+        this.butterflies = [];
+        this.waterLilies = [];
+        this.waterSurfaceMesh = null;
+        this.volumetricBeam = null;
+        this.wishBottle = null;
+        this.wordSprites = [];
+        this.dynamicWaterRipples = [];
+        this.butterflyDust = [];
+        this.interactiveObjects = [];
+        this.mouseWorldTarget = new THREE.Vector3(0, 0.45, 1.2);
+
         // Raycasting & 3D Interactive Touch
         this.raycaster = new THREE.Raycaster();
         this.mouseVector = new THREE.Vector2();
@@ -175,6 +187,10 @@ class Flower3DEngine {
 
         this.createAtmosphericDust();
         this.createCelestialHalo();
+        this.createVolumetricMoonlight();
+        this.createWaterSanctuary();
+        this.create3DWishBottle();
+        this.create3DButterflies();
 
         // Event listeners
         this.bindEvents();
@@ -565,7 +581,6 @@ class Flower3DEngine {
 
         this.createThorns(stemMat);
         this.createLeaves(stemMat);
-        this.createObsidianPedestal();
     }
 
     // --- 💐 Build 6 Companion Roses for Royal Bouquet Mode ---
@@ -766,33 +781,523 @@ class Flower3DEngine {
         });
     }
 
-    createObsidianPedestal() {
-        const pedestalGeom = new THREE.CylinderGeometry(1.6, 1.72, 0.07, 64);
-        const pedestalMat = new THREE.MeshStandardMaterial({
-            color: 0x08080d,
-            roughness: 0.12,
-            metalness: 0.85
-        });
-        const pedestal = new THREE.Mesh(pedestalGeom, pedestalMat);
-        pedestal.position.y = -0.88;
-        pedestal.receiveShadow = true;
-        this.scene.add(pedestal);
+    // --- 🌌 Volumetric Moonlight Godrays ---
+    createVolumetricMoonlight() {
+        const height = 7.5;
+        const geom = new THREE.CylinderGeometry(0.35, 4.0, height, 32, 1, true);
+        geom.translate(0, -height / 2, 0);
 
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 256);
+        grad.addColorStop(0, 'rgba(255, 245, 230, 0.45)');
+        grad.addColorStop(0.3, 'rgba(255, 230, 240, 0.22)');
+        grad.addColorStop(0.7, 'rgba(230, 210, 255, 0.08)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 256, 256);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        const mat = new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            opacity: 0.22,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            side: THREE.DoubleSide
+        });
+
+        this.volumetricBeam = new THREE.Mesh(geom, mat);
+        this.volumetricBeam.position.set(-1.4, 4.5, -0.9);
+        this.volumetricBeam.rotation.z = -0.32;
+        this.volumetricBeam.rotation.x = 0.16;
+        this.scene.add(this.volumetricBeam);
+    }
+
+    // --- 🌊 Enchanted Midnight Water Sanctuary & Floating Lilies ---
+    createWaterSanctuary() {
+        const poolRadius = 2.9;
+        const poolGeom = new THREE.CylinderGeometry(poolRadius, poolRadius + 0.12, 0.08, 64);
+        const poolMat = new THREE.MeshPhysicalMaterial({
+            color: 0x061524,
+            roughness: 0.04,
+            metalness: 0.28,
+            transmission: 0.65,
+            ior: 1.333,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.03
+        });
+        this.waterSurfaceMesh = new THREE.Mesh(poolGeom, poolMat);
+        this.waterSurfaceMesh.position.y = -0.88;
+        this.waterSurfaceMesh.receiveShadow = true;
+        this.waterSurfaceMesh.userData = { isWater: true };
+        this.scene.add(this.waterSurfaceMesh);
+        this.interactiveObjects.push(this.waterSurfaceMesh);
+
+        // Gold & Obsidian Border Rim
+        const rimGeom = new THREE.TorusGeometry(poolRadius + 0.05, 0.04, 16, 64);
+        const rimMat = new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
+            metalness: 0.88,
+            roughness: 0.22
+        });
+        const rim = new THREE.Mesh(rimGeom, rimMat);
+        rim.rotation.x = Math.PI / 2;
+        rim.position.y = -0.84;
+        this.scene.add(rim);
+
+        // Concentric Luminous Ambient Water Rings
         this.rippleRings = [];
-        [1.62, 1.35].forEach((radius, idx) => {
+        [2.1, 1.5, 0.9].forEach((radius, idx) => {
             const ringGeom = new THREE.RingGeometry(radius - 0.015, radius, 64);
             const ringMat = new THREE.MeshBasicMaterial({
                 color: this.themes[this.currentTheme].rimColor,
                 transparent: true,
-                opacity: 0.5 - idx * 0.2,
+                opacity: 0.45 - idx * 0.12,
                 side: THREE.DoubleSide
             });
             const ring = new THREE.Mesh(ringGeom, ringMat);
             ring.rotation.x = -Math.PI / 2;
-            ring.position.y = -0.84 + idx * 0.002;
+            ring.position.y = -0.835 + idx * 0.001;
             this.scene.add(ring);
             this.rippleRings.push(ring);
         });
+
+        // 🪷 Floating Sacred Water Lilies / Lotus Blossoms
+        this.waterLilies = [];
+        const lilyConfigs = [
+            { angle: 0.55, dist: 1.55, scale: 0.38, color: 0xffb7c5, phase: 0 },
+            { angle: 2.15, dist: 1.85, scale: 0.42, color: 0xfdf4f5, phase: 1.2 },
+            { angle: 3.75, dist: 1.60, scale: 0.36, color: 0xd8b4fe, phase: 2.5 },
+            { angle: 5.10, dist: 2.05, scale: 0.40, color: 0xfde047, phase: 3.8 }
+        ];
+
+        lilyConfigs.forEach((cfg) => {
+            const lilyGroup = new THREE.Group();
+            lilyGroup.position.set(
+                Math.cos(cfg.angle) * cfg.dist,
+                -0.84,
+                Math.sin(cfg.angle) * cfg.dist
+            );
+
+            // Lily pad (round pad with notch)
+            const padShape = new THREE.Shape();
+            padShape.absarc(0, 0, 0.55, 0.22, Math.PI * 2 - 0.22, false);
+            padShape.lineTo(0, 0);
+            const padGeom = new THREE.ShapeGeometry(padShape, 32);
+            const padMat = new THREE.MeshStandardMaterial({
+                color: 0x1e4620,
+                roughness: 0.4,
+                side: THREE.DoubleSide
+            });
+            const padMesh = new THREE.Mesh(padGeom, padMat);
+            padMesh.rotation.x = -Math.PI / 2;
+            padMesh.rotation.z = cfg.angle + 0.3;
+            lilyGroup.add(padMesh);
+
+            // Water Lily Blossom Petals
+            const petalCount = 12;
+            const lilyPetalMat = new THREE.MeshPhysicalMaterial({
+                color: cfg.color,
+                roughness: 0.3,
+                transmission: 0.25,
+                clearcoat: 0.4,
+                side: THREE.DoubleSide
+            });
+
+            for (let p = 0; p < petalCount; p++) {
+                const pGeom = new THREE.PlaneGeometry(0.14, 0.38, 8, 8);
+                const pos = pGeom.attributes.position;
+                for (let v = 0; v < pos.count; v++) {
+                    const py = pos.getY(v) + 0.19;
+                    pos.setY(v, py);
+                    const ratio = py / 0.38;
+                    pos.setZ(v, Math.sin(ratio * Math.PI) * 0.05);
+                }
+                pos.needsUpdate = true;
+                pGeom.computeVertexNormals();
+
+                const pMesh = new THREE.Mesh(pGeom, lilyPetalMat);
+                const pAngle = (p / petalCount) * Math.PI * 2;
+                pMesh.position.set(Math.cos(pAngle) * 0.05, 0.02, Math.sin(pAngle) * 0.05);
+                pMesh.rotation.y = -pAngle + Math.PI / 2;
+                pMesh.rotation.x = 0.55 + (p % 2) * 0.25;
+                lilyGroup.add(pMesh);
+            }
+
+            // Golden Lily Core
+            const coreGeom = new THREE.SphereGeometry(0.045, 12, 12);
+            const coreMat = new THREE.MeshStandardMaterial({
+                color: 0xffd700,
+                emissive: 0xffa500,
+                emissiveIntensity: 0.6
+            });
+            const core = new THREE.Mesh(coreGeom, coreMat);
+            core.position.y = 0.04;
+            lilyGroup.add(core);
+
+            lilyGroup.scale.setScalar(cfg.scale);
+            lilyGroup.userData = { phase: cfg.phase, baseScale: cfg.scale };
+            this.scene.add(lilyGroup);
+            this.waterLilies.push(lilyGroup);
+        });
+    }
+
+    // 💧 Dynamic Water Ripple Effect
+    spawnWaterRipple(x, z, maxRadius = 1.8) {
+        const ringGeom = new THREE.RingGeometry(0.02, 0.05, 48);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: this.themes[this.currentTheme].rimColor,
+            transparent: true,
+            opacity: 0.85,
+            side: THREE.DoubleSide
+        });
+        const ring = new THREE.Mesh(ringGeom, ringMat);
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(x, -0.835, z);
+        this.scene.add(ring);
+
+        this.dynamicWaterRipples.push({
+            mesh: ring,
+            radius: 0.05,
+            maxRadius: maxRadius,
+            opacity: 0.85,
+            speed: 0.032
+        });
+    }
+
+    // --- 🍾 3D Floating Crystal Wish Bottle ---
+    create3DWishBottle() {
+        this.wishBottle = new THREE.Group();
+        this.wishBottle.position.set(1.22, -0.77, 0.72);
+
+        // Glass Body
+        const bodyGeom = new THREE.CylinderGeometry(0.08, 0.08, 0.22, 24);
+        const glassMat = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            roughness: 0.04,
+            metalness: 0.0,
+            transmission: 0.96,
+            ior: 1.52,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.02,
+            transparent: true,
+            opacity: 0.95
+        });
+        const body = new THREE.Mesh(bodyGeom, glassMat);
+        this.wishBottle.add(body);
+
+        // Glass Neck
+        const neckGeom = new THREE.CylinderGeometry(0.045, 0.045, 0.07, 24);
+        const neck = new THREE.Mesh(neckGeom, glassMat);
+        neck.position.y = 0.145;
+        this.wishBottle.add(neck);
+
+        // Cork Stopper
+        const corkGeom = new THREE.CylinderGeometry(0.043, 0.039, 0.045, 16);
+        const corkMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8 });
+        const cork = new THREE.Mesh(corkGeom, corkMat);
+        cork.position.y = 0.185;
+        this.wishBottle.add(cork);
+
+        // Rolled Parchment Scroll inside
+        const scrollGeom = new THREE.CylinderGeometry(0.022, 0.022, 0.13, 16);
+        const scrollMat = new THREE.MeshStandardMaterial({ color: 0xfbf1d8, roughness: 0.5 });
+        const scroll = new THREE.Mesh(scrollGeom, scrollMat);
+        scroll.position.set(0, -0.01, 0);
+        scroll.rotation.z = 0.15;
+        this.wishBottle.add(scroll);
+
+        // Red tie ribbon
+        const ribbonGeom = new THREE.TorusGeometry(0.023, 0.005, 8, 16);
+        const ribbonMat = new THREE.MeshBasicMaterial({ color: 0xe62b5a });
+        const ribbon = new THREE.Mesh(ribbonGeom, ribbonMat);
+        ribbon.rotation.x = Math.PI / 2;
+        ribbon.position.y = -0.01;
+        this.wishBottle.add(ribbon);
+
+        // Glowing Fairy Starlight trapped inside
+        const starLight = new THREE.PointLight(0xffea79, 1.2, 0.9);
+        starLight.position.set(0, 0.04, 0);
+        this.wishBottle.add(starLight);
+
+        const sparkGeom = new THREE.SphereGeometry(0.015, 12, 12);
+        const sparkMat = new THREE.MeshBasicMaterial({ color: 0xfff3a8 });
+        const sparkMesh = new THREE.Mesh(sparkGeom, sparkMat);
+        sparkMesh.position.copy(starLight.position);
+        this.wishBottle.add(sparkMesh);
+
+        // Raycasting metadata
+        body.userData = { isWishBottle: true };
+        neck.userData = { isWishBottle: true };
+        this.wishBottle.userData = { isWishBottle: true };
+        this.scene.add(this.wishBottle);
+        this.interactiveObjects.push(body);
+        this.interactiveObjects.push(neck);
+    }
+
+    // --- 🦋 Procedural 3D Bioluminescent Butterflies ---
+    generateButterflyWingTexture(themeHue = 0.55, rimHue = 0.95) {
+        const size = 512;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(20, 256);
+        ctx.bezierCurveTo(40, 60, 200, 20, 480, 50);
+        ctx.bezierCurveTo(510, 160, 490, 280, 440, 360);
+        ctx.bezierCurveTo(390, 480, 220, 500, 120, 460);
+        ctx.bezierCurveTo(30, 420, 10, 320, 20, 256);
+        ctx.closePath();
+        ctx.clip();
+
+        // Iridescent background gradient
+        const grad = ctx.createRadialGradient(80, 256, 20, 320, 256, 360);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.25, `hsl(${themeHue * 360}, 100%, 70%)`);
+        grad.addColorStop(0.65, `hsl(${themeHue * 360}, 95%, 45%)`);
+        grad.addColorStop(0.92, `hsl(${rimHue * 360}, 90%, 35%)`);
+        grad.addColorStop(1, '#050308');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, size, size);
+
+        // Intricate Wing Veins
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+        ctx.lineWidth = 2.5;
+        const veinEnds = [
+            [460, 60], [490, 140], [480, 220], [450, 300],
+            [410, 380], [330, 450], [240, 480], [160, 460]
+        ];
+        veinEnds.forEach(pt => {
+            ctx.beginPath();
+            ctx.moveTo(30, 256);
+            ctx.bezierCurveTo(150, 256, 260, pt[1] * 0.8 + 50, pt[0], pt[1]);
+            ctx.stroke();
+
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(220, (256 + pt[1]) * 0.5);
+            ctx.lineTo(pt[0] - 30, pt[1] + 20);
+            ctx.stroke();
+            ctx.lineWidth = 2.5;
+        });
+
+        // Golden Fairy Dust Spots on Border
+        ctx.fillStyle = '#fff9db';
+        for (let i = 0; i < 35; i++) {
+            const angle = (i / 35) * Math.PI * 1.5 - 0.4;
+            const r = 240 + Math.sin(i * 3) * 15;
+            const x = 250 + Math.cos(angle) * r;
+            const y = 256 + Math.sin(angle) * r;
+            ctx.beginPath();
+            ctx.arc(x, y, 2.5 + Math.random() * 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.restore();
+
+        const tex = new THREE.CanvasTexture(canvas);
+        return tex;
+    }
+
+    createSingleButterfly(config) {
+        const group = new THREE.Group();
+
+        // Slender Iridescent Body
+        const bodyGeom = new THREE.CylinderGeometry(0.012, 0.008, 0.16, 8);
+        const bodyMat = new THREE.MeshStandardMaterial({
+            color: 0x111322,
+            metalness: 0.8,
+            roughness: 0.2
+        });
+        const body = new THREE.Mesh(bodyGeom, bodyMat);
+        body.rotation.x = Math.PI / 2;
+        group.add(body);
+
+        // Head with antennae
+        const headGeom = new THREE.SphereGeometry(0.014, 8, 8);
+        const head = new THREE.Mesh(headGeom, bodyMat);
+        head.position.set(0, 0, -0.09);
+        group.add(head);
+
+        // Antennae
+        const antMat = new THREE.LineBasicMaterial({ color: 0xffd700 });
+        [-1, 1].forEach(side => {
+            const curve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(0, 0, -0.09),
+                new THREE.Vector3(side * 0.02, 0.03, -0.13),
+                new THREE.Vector3(side * 0.045, 0.06, -0.16)
+            ]);
+            const antGeom = new THREE.BufferGeometry().setFromPoints(curve.getPoints(8));
+            group.add(new THREE.Line(antGeom, antMat));
+        });
+
+        // Wing Texture & Materials
+        const wingTex = this.generateButterflyWingTexture(config.themeHue, config.rimHue);
+        const wingMat = new THREE.MeshPhysicalMaterial({
+            map: wingTex,
+            transparent: true,
+            opacity: 0.92,
+            transmission: 0.35,
+            roughness: 0.25,
+            clearcoat: 0.85,
+            side: THREE.DoubleSide
+        });
+
+        // Left Wing Group (hinge at x = 0)
+        const leftWingGroup = new THREE.Group();
+        leftWingGroup.position.set(0.008, 0.01, 0);
+
+        const wingGeom = new THREE.PlaneGeometry(0.38, 0.44, 8, 8);
+        wingGeom.translate(0.19, 0, 0);
+        const leftWingMesh = new THREE.Mesh(wingGeom, wingMat);
+        leftWingMesh.rotation.x = -Math.PI / 2;
+        leftWingGroup.add(leftWingMesh);
+        group.add(leftWingGroup);
+
+        // Right Wing Group (hinge at x = 0, mirrored)
+        const rightWingGroup = new THREE.Group();
+        rightWingGroup.position.set(-0.008, 0.01, 0);
+
+        const rightWingGeom = new THREE.PlaneGeometry(0.38, 0.44, 8, 8);
+        rightWingGeom.translate(-0.19, 0, 0);
+        rightWingGeom.scale(-1, 1, 1);
+        const rightWingMesh = new THREE.Mesh(rightWingGeom, wingMat);
+        rightWingMesh.rotation.x = -Math.PI / 2;
+        rightWingGroup.add(rightWingMesh);
+        group.add(rightWingGroup);
+
+        // Trapped starlight glow under butterfly
+        const glow = new THREE.PointLight(config.glowColor, 0.8, 1.2);
+        glow.position.set(0, 0.02, 0);
+        group.add(glow);
+
+        const butterflyObj = {
+            mesh: group,
+            leftWing: leftWingGroup,
+            rightWing: rightWingGroup,
+            config: config,
+            state: 'flying',
+            tOffset: config.tOffset || 0,
+            speed: config.speed || 0.6,
+            flapPhase: Math.random() * Math.PI,
+            loopAngle: 0,
+            triggerAcrobaticLoop: function() {
+                this.state = 'looping';
+                this.loopAngle = 0;
+            }
+        };
+
+        // Raycasting click trigger
+        body.userData = { isButterfly: true, butterflyRef: butterflyObj };
+        leftWingMesh.userData = { isButterfly: true, butterflyRef: butterflyObj };
+        rightWingMesh.userData = { isButterfly: true, butterflyRef: butterflyObj };
+        group.userData = { isButterfly: true, butterflyRef: butterflyObj };
+
+        this.scene.add(group);
+        this.interactiveObjects.push(body);
+        this.interactiveObjects.push(leftWingMesh);
+        this.interactiveObjects.push(rightWingMesh);
+
+        return butterflyObj;
+    }
+
+    create3DButterflies() {
+        this.butterflies = [
+            this.createSingleButterfly({
+                name: 'Morpho Azure',
+                themeHue: 0.55,
+                rimHue: 0.78,
+                glowColor: 0x38bdf8,
+                tOffset: 0,
+                speed: 0.55,
+                radiusX: 1.35,
+                radiusZ: 1.25,
+                heightBase: 0.65,
+                heightAmp: 0.35
+            }),
+            this.createSingleButterfly({
+                name: 'Aura Rose',
+                themeHue: 0.95,
+                rimHue: 0.12,
+                glowColor: 0xff69b4,
+                tOffset: Math.PI,
+                speed: 0.48,
+                radiusX: 1.55,
+                radiusZ: 1.45,
+                heightBase: 0.50,
+                heightAmp: 0.42
+            })
+        ];
+    }
+
+    // --- ✨ 3D Floating Word Sprites (Lời Chúc Khắc Ghi) ---
+    spawnFloatingWordSprite(hitPoint) {
+        const words = [
+            '✨ Rạng Rỡ',
+            '🌸 Xinh Đẹp',
+            '💖 Hạnh Phúc',
+            '🌟 Tỏa Sáng',
+            '👑 Kiêu Hãnh',
+            '🌷 Dịu Dàng',
+            '🍀 Bình An',
+            '💎 Quý Phái',
+            '🕊️ Tự Do',
+            '🌺 Ngát Hương'
+        ];
+        const text = words[Math.floor(Math.random() * words.length)];
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 96;
+        const ctx = canvas.getContext('2d');
+
+        // Draw pill badge
+        ctx.fillStyle = 'rgba(15, 8, 24, 0.85)';
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(10, 10, 236, 76, 38);
+        } else {
+            ctx.rect(10, 10, 236, 76);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = 'bold 28px "Playfair Display", "Times New Roman", serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#e62b5a';
+        ctx.shadowBlur = 10;
+        ctx.fillText(text, 128, 48);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 1.0, depthWrite: false });
+        const sprite = new THREE.Sprite(mat);
+        sprite.position.copy(hitPoint);
+        sprite.position.y += 0.1;
+        sprite.scale.set(0.65, 0.24, 1);
+        sprite.userData = {
+            vy: 0.012 + Math.random() * 0.006,
+            life: 1.0,
+            seed: Math.random() * 10
+        };
+
+        this.scene.add(sprite);
+        this.wordSprites.push(sprite);
+    }
+
+    // --- 🎚️ Interactive Bloom Progress Controller ---
+    setBloomProgress(val) {
+        this.targetBloom = Math.max(0.0, Math.min(1.0, val));
+        this.isBlooming = this.targetBloom > 0.05;
     }
 
     createCelestialHalo() {
@@ -978,6 +1483,13 @@ class Flower3DEngine {
             this.mouseVector.x = ((clientX - rect.left) / rect.width) * 2 - 1;
             this.mouseVector.y = -((clientY - rect.top) / rect.height) * 2 + 1;
 
+            // 3D cursor plane intersection for curious butterfly tracking
+            if (this.camera) {
+                const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+                this.raycaster.setFromCamera(this.mouseVector, this.camera);
+                this.raycaster.ray.intersectPlane(plane, this.mouseWorldTarget);
+            }
+
             if (!this.isPointerDown) return;
             const deltaX = clientX - this.pointerStartX;
             const deltaY = clientY - this.pointerStartY;
@@ -1018,31 +1530,66 @@ class Flower3DEngine {
             this.targetZoom = Math.max(2.2, Math.min(5.5, this.targetZoom));
         }, { passive: false });
 
-        // Raycasting Click directly on individual petals!
+        // 🌟 Raycasting Click across Petals, Butterflies, Wish Bottle, and Water Sanctuary!
         dom.addEventListener('click', (e) => {
             const rect = dom.getBoundingClientRect();
             this.mouseVector.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
             this.mouseVector.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
             this.raycaster.setFromCamera(this.mouseVector, this.camera);
-            const intersects = this.raycaster.intersectObjects(this.interactivePetalMeshes, false);
+            const allTargets = [...this.interactivePetalMeshes, ...this.interactiveObjects];
+            const intersects = this.raycaster.intersectObjects(allTargets, true);
 
             if (intersects.length > 0) {
                 const hit = intersects[0];
-                const hitMesh = hit.object;
-                const idx = hitMesh.userData.petalIndex || 0;
+                const hitObj = hit.object;
 
-                // Play harmonic piano chord note corresponding to petal height!
-                if (window.soundEngine) {
-                    window.soundEngine.playHarmonicNote(idx);
+                // 1. Click on 3D Floating Crystal Wish Bottle
+                if (hitObj.userData && hitObj.userData.isWishBottle) {
+                    if (window.soundEngine) window.soundEngine.playCrystalChime();
+                    if (window.openWishBottleModal) window.openWishBottleModal();
+                    this.spawn3DPetalFlakes(hit.point, 16);
+                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
+                    return;
                 }
 
-                // Spawn floating 3D petal flakes at hit coordinate
-                this.spawn3DPetalFlakes(hit.point, 14);
+                // 2. Click on 3D Luminous Butterfly
+                if (hitObj.userData && hitObj.userData.isButterfly) {
+                    if (hitObj.userData.butterflyRef) {
+                        hitObj.userData.butterflyRef.triggerAcrobaticLoop();
+                    }
+                    if (window.soundEngine) window.soundEngine.playFairyHarp();
+                    if (window.showToast) window.showToast("🦋 Chú bướm dạ quang gửi tặng bạn muôn điều diệu kỳ!");
+                    this.spawn3DPetalFlakes(hit.point, 14);
+                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
+                    return;
+                }
 
-                // Vibration punch on hit petal
-                hitMesh.scale.multiplyScalar(1.15);
-                setTimeout(() => hitMesh.scale.divideScalar(1.15), 180);
+                // 3. Click on Midnight Water Sanctuary Surface
+                if (hitObj.userData && hitObj.userData.isWater) {
+                    if (window.soundEngine) window.soundEngine.playWaterDrop();
+                    this.spawnWaterRipple(hit.point.x, hit.point.z, 2.2);
+                    if (window.particleEngine) window.particleEngine.spawnCursorSparkles(e.clientX, e.clientY);
+                    return;
+                }
+
+                // 4. Click on 3D Velvet Petal
+                if (hitObj.userData && hitObj.userData.isPetal) {
+                    const idx = hitObj.userData.petalIndex || 0;
+
+                    // Play next note of iconic song melody or harmonic chord!
+                    if (window.soundEngine) {
+                        window.soundEngine.playMelodyNote(idx);
+                    }
+
+                    // Spawn 3D detached petal flakes & floating empowering word
+                    this.spawn3DPetalFlakes(hit.point, 14);
+                    this.spawnFloatingWordSprite(hit.point);
+
+                    // Vibration punch on hit petal
+                    hitObj.scale.multiplyScalar(1.15);
+                    setTimeout(() => hitObj.scale.divideScalar(1.15), 180);
+                }
             } else {
                 if (window.soundEngine) window.soundEngine.playSparkle();
             }
@@ -1101,6 +1648,103 @@ class Flower3DEngine {
         this.rippleRings.forEach((ring, idx) => {
             ring.scale.setScalar(1 + Math.sin(elapsed * 2 + idx) * 0.015);
         });
+
+        // 🌌 Volumetric Moonlight Godrays Breathing
+        if (this.volumetricBeam) {
+            this.volumetricBeam.material.opacity = 0.20 + Math.sin(elapsed * 0.8) * 0.06;
+        }
+
+        // 🪷 Floating Water Lilies Buoyant Bobbing
+        this.waterLilies.forEach(lily => {
+            const ph = lily.userData.phase || 0;
+            lily.position.y = -0.84 + Math.sin(elapsed * 1.5 + ph) * 0.014;
+            lily.rotation.z = Math.sin(elapsed * 1.2 + ph) * 0.02;
+        });
+
+        // 🍾 3D Floating Crystal Wish Bottle Bobbing
+        if (this.wishBottle) {
+            this.wishBottle.position.y = -0.77 + Math.sin(elapsed * 1.8) * 0.016;
+            this.wishBottle.rotation.z = 0.12 + Math.sin(elapsed * 1.4) * 0.06;
+            this.wishBottle.rotation.x = Math.cos(elapsed * 1.1) * 0.05;
+        }
+
+        // 💧 Dynamic Water Ripples Expansion
+        for (let i = this.dynamicWaterRipples.length - 1; i >= 0; i--) {
+            const rip = this.dynamicWaterRipples[i];
+            rip.radius += rip.speed;
+            rip.opacity -= 0.018;
+            rip.mesh.scale.set(rip.radius, rip.radius, 1);
+            rip.mesh.material.opacity = Math.max(0, rip.opacity);
+            if (rip.opacity <= 0 || rip.radius >= rip.maxRadius) {
+                this.scene.remove(rip.mesh);
+                rip.mesh.geometry.dispose();
+                rip.mesh.material.dispose();
+                this.dynamicWaterRipples.splice(i, 1);
+            }
+        }
+
+        // 🦋 3D Living Butterflies Flight, Wing Flap, Cursor Tracking & Loop
+        this.butterflies.forEach(b => {
+            const cfg = b.config;
+            b.flapPhase += delta * 24;
+
+            if (b.state === 'looping') {
+                b.loopAngle += delta * 7.0;
+                b.mesh.rotation.x += delta * 7.0;
+                const loopWingAngle = Math.sin(b.flapPhase * 1.5) * 0.85;
+                b.leftWing.rotation.y = loopWingAngle;
+                b.rightWing.rotation.y = -loopWingAngle;
+                if (b.loopAngle >= Math.PI * 2) {
+                    b.state = 'flying';
+                    b.mesh.rotation.x = 0;
+                }
+            } else {
+                const t = elapsed * b.speed + b.tOffset;
+                const orbitX = Math.sin(t) * (cfg.radiusX + Math.cos(t * 0.5) * 0.3);
+                const orbitZ = Math.cos(t) * (cfg.radiusZ + Math.sin(t * 0.5) * 0.3);
+                const orbitY = cfg.heightBase + Math.sin(t * 1.6) * cfg.heightAmp;
+
+                let targetX = orbitX;
+                let targetY = orbitY;
+                let targetZ = orbitZ;
+
+                if (this.mouseWorldTarget && b.config.name === 'Morpho Azure') {
+                    targetX = orbitX * 0.65 + this.mouseWorldTarget.x * 0.35;
+                    targetY = orbitY * 0.65 + Math.max(0.15, this.mouseWorldTarget.y) * 0.35;
+                    targetZ = orbitZ * 0.65 + this.mouseWorldTarget.z * 0.35;
+                }
+
+                b.mesh.position.x += (targetX - b.mesh.position.x) * 0.05;
+                b.mesh.position.y += (targetY - b.mesh.position.y) * 0.05;
+                b.mesh.position.z += (targetZ - b.mesh.position.z) * 0.05;
+
+                const lookTarget = new THREE.Vector3(
+                    targetX + Math.cos(t) * 0.5,
+                    targetY + Math.cos(t * 1.6) * 0.15,
+                    targetZ - Math.sin(t) * 0.5
+                );
+                b.mesh.lookAt(lookTarget);
+
+                const wingAngle = Math.sin(b.flapPhase) * 0.75;
+                b.leftWing.rotation.y = wingAngle;
+                b.rightWing.rotation.y = -wingAngle;
+            }
+        });
+
+        // ✨ 3D Floating Word Sprites Physics
+        for (let i = this.wordSprites.length - 1; i >= 0; i--) {
+            const ws = this.wordSprites[i];
+            ws.position.y += ws.userData.vy;
+            ws.position.x += Math.sin(elapsed * 2.5 + ws.userData.seed) * 0.0018;
+            ws.userData.life -= 0.012;
+            ws.material.opacity = Math.max(0, ws.userData.life);
+            if (ws.userData.life <= 0) {
+                this.scene.remove(ws);
+                ws.material.map.dispose();
+                ws.material.dispose();
+                this.wordSprites.splice(i, 1);
+            }
+        }
 
         // Floating 3D Petal Flakes Physics
         for (let i = this.floatingPetalParticles.length - 1; i >= 0; i--) {

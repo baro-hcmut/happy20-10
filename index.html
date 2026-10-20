@@ -143,6 +143,20 @@
             <span>✨ Xoay 360° • Chạm cánh hoa nghe hợp âm dương cầm & tỏa bụi tiên</span>
         </div>
 
+        <!-- 🌹 Interactive Bloom Time-Traveler Slider Card -->
+        <div id="bloom-controller-card" class="bloom-controller-card">
+            <div class="bloom-card-header">
+                <span class="bloom-icon">🌱</span>
+                <span class="bloom-title">Độ Nở Hoa: <strong id="bloom-percent-label">100%</strong></span>
+                <button id="btn-bloom-auto" class="bloom-quick-btn" title="Tự động bung nở đóa hoa">Tỏa Hương</button>
+            </div>
+            <div class="bloom-slider-row">
+                <button class="bloom-step-btn" id="btn-bloom-bud" title="Về nụ hoa e ấp">Nụ</button>
+                <input type="range" id="bloom-range-slider" min="0" max="100" value="100" step="1" class="luxury-range" title="Kéo để điều chỉnh độ nở">
+                <button class="bloom-step-btn" id="btn-bloom-full" title="Bung nở rực rỡ nhất">Nở</button>
+            </div>
+        </div>
+
         <!-- Floating Bottom Dock Controls (Masterclass Suite) -->
         <nav class="garden-bottom-dock" aria-label="Điều khiển tương tác">
             <button id="btn-toggle-bouquet" class="dock-item" title="Chuyển đổi Đóa Hồng Đơn / Bó Hoa 7 Bông">
@@ -153,6 +167,16 @@
             <button id="btn-cinematic-mode" class="dock-item" title="Bật chế độ xem điện ảnh tự động">
                 <span class="dock-icon">🎬</span>
                 <span>Điện Ảnh</span>
+            </button>
+
+            <button id="btn-open-bottle" class="dock-item" title="Khám phá Lọ Thủy Tinh Ước Nguyện trên mặt hồ 3D">
+                <span class="dock-icon">🍾</span>
+                <span>Lọ Ước</span>
+            </button>
+
+            <button id="btn-melody-mode" class="dock-item" title="Chọn bản tình ca chơi trên cánh hoa">
+                <span class="dock-icon">🎹</span>
+                <span id="melody-btn-label">Cung Đàn</span>
             </button>
 
             <button id="btn-open-polaroid" class="dock-item" title="Chụp ảnh Polaroid kỷ niệm 20/10">
@@ -212,6 +236,39 @@
             <button class="theme-btn" data-theme="crystal">
                 <span class="color-swatch" style="background: #38bdf8; color: #a5f3fc;"></span>
                 <span class="theme-name">Băng Ngọc</span>
+            </button>
+        </div>
+
+        <!-- 🎹 Melody Mode Popover -->
+        <div id="melody-popover" class="melody-popover">
+            <div class="popover-title">🎹 Chọn Bản Tình Ca (Chạm Cánh Hoa Để Chơi)</div>
+            <button class="song-btn active" data-song="river">
+                <span class="song-icon">🌊</span>
+                <div class="song-info">
+                    <strong class="song-name">River Flows In You</strong>
+                    <span class="song-desc">Yiruma • Dương cầm lãng mạn tha thiết</span>
+                </div>
+            </button>
+            <button class="song-btn" data-song="canon">
+                <span class="song-icon">🎻</span>
+                <div class="song-info">
+                    <strong class="song-name">Canon in D</strong>
+                    <span class="song-desc">Pachelbel • Giai điệu cổ điển bất hủ</span>
+                </div>
+            </button>
+            <button class="song-btn" data-song="thousand_years">
+                <span class="song-icon">💖</span>
+                <div class="song-info">
+                    <strong class="song-name">A Thousand Years</strong>
+                    <span class="song-desc">Christina Perri • Lời hứa ngàn năm</span>
+                </div>
+            </button>
+            <button class="song-btn" data-song="freestyle">
+                <span class="song-icon">✨</span>
+                <div class="song-info">
+                    <strong class="song-name">Hợp Âm Tự Do (Freestyle)</strong>
+                    <span class="song-desc">Thang âm huyền diệu theo từng tầng cánh hoa</span>
+                </div>
             </button>
         </div>
     </div>
@@ -346,6 +403,74 @@
                 <button id="btn-save-recipient" class="btn-action-primary">
                     💾 Cập Nhật & Tạo Link Lời Chúc
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 6: ENCHANTED 3D WISH BOTTLE (LỌ THỦY TINH ƯỚC NGUYỆN)
+         ========================================================================== -->
+    <div id="modal-wish-bottle" class="modal-overlay">
+        <div class="modal-card wish-bottle-card">
+            <button class="btn-close-modal" aria-label="Đóng lọ ước nguyện">✕</button>
+
+            <div class="bottle-card-header">
+                <div class="bottle-glow-avatar">🍾✨</div>
+                <h3 class="letter-title">Lọ Thủy Tinh Nguyện Ước</h3>
+                <p class="bottle-card-sub">Chiếc lọ pha lê giữ trọn những lời chúc và điều ước thiêng liêng</p>
+            </div>
+
+            <!-- Tabs: Đọc Lời Chúc / Viết Lời Chúc Riêng -->
+            <div class="bottle-tab-bar">
+                <button id="tab-btn-read" class="bottle-tab-pill active">📜 Lời Chúc Tinh Tú</button>
+                <button id="tab-btn-write" class="bottle-tab-pill">✍️ Gửi Ước Nguyện Riêng</button>
+            </div>
+
+            <!-- Tab 1: Read Wishes Pane -->
+            <div id="pane-read-wish" class="bottle-pane active">
+                <div class="wish-parchment-scroll" id="wish-scroll-target">
+                    <!-- Dynamic wish injected by JS -->
+                </div>
+                <div class="wish-actions-row">
+                    <button id="btn-draw-random-wish" class="glass-btn" style="flex: 1;">
+                        🎲 Đổi Lời Chúc Khác
+                    </button>
+                    <button id="btn-goto-write-wish" class="btn-action-primary" style="flex: 1.2;">
+                        ✍️ Viết Lời Chúc Tặng Người Ấy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 2: Write Custom Wish Pane -->
+            <div id="pane-write-wish" class="bottle-pane">
+                <div class="custom-wish-form">
+                    <div class="form-field-group">
+                        <label for="input-wish-to">Gửi đến ai:</label>
+                        <input type="text" id="input-wish-to" placeholder="Ví dụ: Mẹ yêu, Bạn Thảo, Cô giáo, Em Trang..." class="app-input" maxlength="40">
+                    </div>
+                    <div class="form-field-group">
+                        <label for="input-wish-message">Lời nhắn gửi tâm tình:</label>
+                        <textarea id="input-wish-message" rows="4" placeholder="Viết những điều chân thành nhất từ trái tim bạn..." class="app-input" style="height: auto; padding: 12px; resize: none;"></textarea>
+                    </div>
+                    <div class="form-field-group">
+                        <label for="input-wish-from">Người gửi (ký tên):</label>
+                        <input type="text" id="input-wish-from" placeholder="Tên hoặc biệt danh của bạn..." class="app-input" maxlength="30">
+                    </div>
+
+                    <button id="btn-seal-bottle-wish" class="btn-action-primary" style="width: 100%; margin-top: 6px;">
+                        🪄 Niêm Phong Sáp Vàng & Tạo Link Tặng
+                    </button>
+
+                    <div id="wish-link-container" class="wish-link-container hidden">
+                        <p class="wish-link-heading">✨ Lời chúc đã được niêm phong vào Lọ Thủy Tinh! Gửi link này cho người ấy:</p>
+                        <div class="wish-copy-box">
+                            <input type="text" id="input-wish-generated-link" readonly class="app-input" style="font-size: 0.82rem;">
+                            <button id="btn-copy-wish-link" class="btn-action-primary" style="padding: 0 16px; white-space: nowrap;">
+                                📋 Sao Chép
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
