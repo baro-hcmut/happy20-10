@@ -33,115 +33,121 @@
         <span id="subtitle-text">"Mỗi đóa hoa nở rộ là một lời chúc dịu dàng gửi đến bạn..."</span>
     </div>
 
-    <!-- ==========================================================================
-         SCENE DIRECTOR & TIMELINE CONTROLLER (HÀNH TRÌNH ĐA CẢNH)
-         ========================================================================== -->
-    <nav id="scene-timeline-bar" class="scene-timeline-bar" aria-label="Điều hướng các cảnh">
-        <button id="btn-prev-scene" class="timeline-nav-btn" title="Cảnh trước">❮</button>
-        <div class="timeline-steps">
-            <button class="timeline-step active" data-scene="1">
-                <span class="step-num">1</span>
-                <span class="step-name">Lời Chào</span>
-            </button>
-            <button class="timeline-step" data-scene="2">
-                <span class="step-num">2</span>
-                <span class="step-name">Mở Quà</span>
-            </button>
-            <button class="timeline-step" data-scene="3">
-                <span class="step-num">3</span>
-                <span class="step-name">Pháo Hoa</span>
-            </button>
-            <button class="timeline-step" data-scene="4">
-                <span class="step-num">4</span>
-                <span class="step-name">Vườn Hồng 3D</span>
-            </button>
-            <button class="timeline-step" data-scene="5">
-                <span class="step-num">5</span>
-                <span class="step-name">Trạm Kỷ Niệm</span>
-            </button>
-        </div>
-        <button id="btn-next-scene" class="timeline-nav-btn" title="Cảnh kế tiếp">❯</button>
-        <button id="btn-auto-story" class="timeline-auto-btn" title="Tự động trình chiếu như một bộ phim">
-            <span id="auto-story-icon">▶</span>
-            <span id="auto-story-label">Tự Động</span>
+    <!-- Discreet Floating Story Navigation Controls (Non-intrusive) -->
+    <div id="story-nav-controls" class="story-nav-controls">
+        <button id="btn-skip-story" class="story-ctrl-pill" title="Bỏ qua đến Vườn Hoa 3D">
+            <span>Bỏ qua ⏩</span>
         </button>
-    </nav>
+        <button id="btn-replay-story" class="story-ctrl-pill hidden" title="Thưởng thức lại câu chuyện từ đầu">
+            <span>↺ Xem lại phim</span>
+        </button>
+    </div>
+
+    <!-- 💖 Layer: Falling 3D Tumbling Hearts & Meteors (Active from Start) -->
+    <div id="hearts-container" class="hearts-container"></div>
+    <div id="meteor-container" class="meteor-container"></div>
 
     <!-- ==========================================================================
-         SCENE 1: LỜI MỞ ĐẦU (THE STARLIGHT PRELUDE & FALLING HEARTS)
+         START TOUCH PORTAL (CÁNH CỬA KỲ DIỆU 20/10)
          ========================================================================== -->
-    <section id="scene-1" class="scene-pane active" data-scene="1">
-        <div id="hearts-container" class="hearts-container"></div>
-        <div class="scene-content prelude-content">
+    <div id="start-screen" class="start-screen active">
+        <div class="start-screen-portal">
+            <div class="start-heart-pulse">🌸</div>
             <div class="intro-badge">✨ 20 · 10 · VIỆT NAM ✨</div>
-            <h1 class="scene-title-gradient">
-                Chúc <span class="dynamic-recipient">Những Cô Gái Tuyệt Vời</span><br>
-                Một Ngày 20/10 Thật Hạnh Phúc & Ý Nghĩa! 💖
+            <h1 class="start-heading-script">
+                Chúc <span class="dynamic-recipient gold-text">Những Cô Gái Tuyệt Vời</span><br>
+                Một Ngày 20/10 Thật Hạnh Phúc & Rạng Rỡ! 💖
             </h1>
-            <p class="scene-subtitle">
-                "Mỗi người phụ nữ là một đóa hoa diệu kỳ, làm cho thế gian thêm ngọt ngào, dịu dàng và rực rỡ..."
-            </p>
-            <div class="scene-action-row">
-                <button id="btn-start-journey" class="btn-primary-glow">
-                    🎁 Khám Phá Món Quà (Bước Tiếp) ❯
-                </button>
+            <div class="start-cta-pill">
+                <span class="start-cta-icon">✨</span>
+                <span>Chạm vào màn hình để mở món quà</span>
+                <span class="start-cta-icon">✨</span>
             </div>
-            <div class="intro-hint">
-                <span>🎵 Chạm vào bất kỳ đâu để bắt đầu & lắng nghe giai điệu</span>
+            <div class="start-hint">🎵 Hãy bật âm lượng để thưởng thức trọn vẹn giai điệu lãng mạn</div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         CINEMATIC STORY OVERLAY (TỰ ĐỘNG CHUYỂN CẢNH NHƯ MỘT BỘ PHIM)
+         ========================================================================== -->
+    <div id="story-overlay" class="story-overlay hidden">
+        <!-- CẢNH 1: LỜI MỞ ĐẦU THI VỊ -->
+        <div id="story-scene-1" class="story-scene active">
+            <div class="story-text-center">
+                <div class="story-badge">✨ 20 · 10 · VIỆT NAM ✨</div>
+                <h1 class="story-heading-script">
+                    "Mỗi người phụ nữ là một đóa hoa diệu kỳ,<br>
+                    làm cho thế gian thêm ngọt ngào, dịu dàng và rực rỡ..." 🌸
+                </h1>
             </div>
         </div>
-    </section>
 
-    <!-- ==========================================================================
-         SCENE 2: HỘP QUÀ TÌNH YÊU (THE GIFT BOX & LOVE BUBBLES)
-         ========================================================================== -->
-    <section id="scene-2" class="scene-pane" data-scene="2">
-        <div class="love-bubbles-container" id="love-bubbles-container"></div>
-        <div class="scene-content gift-scene-content">
-            <div class="intro-badge">🎁 MÓN QUÀ ĐẶC BIỆT</div>
-            <h2 class="scene-heading-script">Đây là món quà đặc biệt tụi mình chuẩn bị dành riêng cho bạn... 🌸</h2>
-            <div class="gift-box-wrapper" id="gift-box-click">
-                <div class="gift-box-aura"></div>
-                <div class="gift-box">
-                    <div class="ribbon-vertical"></div>
-                    <div class="ribbon-horizontal"></div>
-                    <div class="ribbon-bow">
-                        <div class="bow-loop left"></div>
-                        <div class="bow-loop right"></div>
-                        <div class="bow-center"></div>
+        <!-- CẢNH 2: MÓN QUÀ TÌNH YÊU & 20 BONG BÓNG TRÁI TIM HỒNG -->
+        <div id="story-scene-2" class="story-scene hidden">
+            <div class="bubbles">
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                <div class="bubble"><svg class="heart-svg" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+            </div>
+            <div class="story-text-center">
+                <h1 class="story-heading-script">Đây là món quà đặc biệt tụi mình chuẩn bị dành riêng cho bạn... 🌸</h1>
+                <div class="gift-box-wrapper" id="gift-box-click">
+                    <div class="gift-box-aura"></div>
+                    <div class="gift-box">
+                        <div class="ribbon-vertical"></div>
+                        <div class="ribbon-horizontal"></div>
+                        <div class="ribbon-bow">
+                            <div class="bow-loop left"></div>
+                            <div class="bow-loop right"></div>
+                            <div class="bow-center"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <button id="btn-open-gift" class="btn-open-gift" aria-label="Mở món quà 20/10">
-                ✨ Chạm Vào Để Mở Hộp Quà ✨
-            </button>
         </div>
-    </section>
 
-    <!-- ==========================================================================
-         SCENE 3: ĐẠI TIỆC PHÁO HOA NGÂN HÀ (GRAND GALAXY FIREWORKS)
-         ========================================================================== -->
-    <section id="scene-3" class="scene-pane" data-scene="3">
-        <div class="scene-content fireworks-scene-content">
-            <div class="fireworks-banner-card">
-                <div class="fireworks-sparkle-badge">🎆 CELEBRATION 🎆</div>
-                <h1 class="fireworks-big-title">HAPPY VIETNAMESE WOMEN'S DAY!</h1>
+        <!-- CẢNH 3: ĐẠI TIỆC PHÁO HOA NGÂN HÀ -->
+        <div id="story-scene-3" class="story-scene hidden">
+            <div class="story-celebration-banner">
+                <div class="fireworks-sparkle-badge">🎆 HAPPY VIETNAMESE WOMEN'S DAY 🎆</div>
+                <h1 class="fireworks-big-title">RỰC RỠ & HẠNH PHÚC 20/10!</h1>
                 <p class="fireworks-quote">
-                    Chúc <strong class="dynamic-recipient gold-text">Những Cô Gái Tuyệt Vời</strong> luôn xinh đẹp kiêu sa như hoa sớm mai, bản lĩnh kiên cường và hạnh phúc ngập tràn! 💖
+                    Chúc <strong class="dynamic-recipient gold-text">Những Cô Gái Tuyệt Vời</strong> luôn xinh đẹp kiêu sa, bản lĩnh rạng ngời và ngập tràn hạnh phúc! 💖
                 </p>
             </div>
-            <div class="scene-action-row">
-                <button id="btn-goto-garden" class="btn-primary-glow">
-                    🌹 Bước Vào Vườn Hoa 3D (Cảnh 4) ❯
-                </button>
-            </div>
         </div>
-    </section>
+    </div>
 
     <!-- ==========================================================================
          STAGE 2 / SCENE 4: INTERACTIVE ENCHANTED 3D GARDEN
          ========================================================================== -->
     <div id="stage-garden" class="stage-garden scene-pane" data-scene="4">
+        <!-- Living Fireflies Cursor & Night Mist -->
+        <div class="firefly firefly-tail"></div>
+        <div class="firefly firefly-tail"></div>
+        <div class="firefly firefly-tail"></div>
+        <div class="firefly firefly-tail"></div>
+        <div class="firefly" id="firefly-head"></div>
+        <div class="fog-layer fog-layer--1"></div>
+        <div class="fog-layer fog-layer--2"></div>
+
         <!-- Floating Top Bar -->
         <header class="garden-top-bar">
             <div class="brand-badge">
@@ -275,10 +281,6 @@
                 <span class="dock-icon">🔗</span>
                 <span>Chia Sẻ</span>
             </button>
-            <button id="btn-goto-hub" class="dock-item" title="Đến Trạm Kỷ Niệm (Cảnh 5)">
-                <span class="dock-icon">🌟</span>
-                <span>Trạm Kỷ Niệm ❯</span>
-            </button>
         </nav>
 
         <!-- Color Palette Popover -->
@@ -338,64 +340,6 @@
             </button>
         </div>
     </div>
-
-    <!-- ==========================================================================
-         SCENE 5: TRẠM KỶ NIỆM & LỜI CHÚC (MEMORIES & CELEBRATION HUB)
-         ========================================================================== -->
-    <section id="scene-5" class="scene-pane memory-hub-scene" data-scene="5">
-        <div class="scene-content memory-hub-content">
-            <div class="memory-hub-header">
-                <div class="intro-badge">📸 MEMORY & WISHES HUB</div>
-                <h2 class="scene-title-gradient">Trạm Kỷ Niệm Ngày 20/10</h2>
-                <p class="memory-sub">Hãy lưu lại những khoảnh khắc đẹp nhất dành riêng cho bạn hôm nay</p>
-            </div>
-            <div class="memory-cards-grid">
-                <!-- Card 1: Bức thư sáp vàng -->
-                <div class="hub-card" id="hub-card-letter">
-                    <div class="hub-icon">💌</div>
-                    <h3>Thư Tâm Tình</h3>
-                    <p>Bức thư niêm phong sáp vàng gửi gắm muôn lời chúc yêu thương</p>
-                    <button class="hub-card-btn">Mở Thư ❯</button>
-                </div>
-                <!-- Card 2: Lọ Thủy Tinh Ước Nguyện -->
-                <div class="hub-card" id="hub-card-bottle">
-                    <div class="hub-icon">🍾</div>
-                    <h3>Lọ Nguyện Ước</h3>
-                    <p>Khám phá điều ước tinh tú hoặc viết thư bí mật tạo link tặng</p>
-                    <button class="hub-card-btn">Mở Lọ ❯</button>
-                </div>
-                <!-- Card 3: Rút Quẻ May Mắn Tarot -->
-                <div class="hub-card" id="hub-card-tarot">
-                    <div class="hub-icon">🎴</div>
-                    <h3>Quẻ May Mắn</h3>
-                    <p>Rút 6 lá bài Hologram đại cát đại lợi cho tương lai</p>
-                    <button class="hub-card-btn">Rút Quẻ ❯</button>
-                </div>
-                <!-- Card 4: Thả Đèn Trời -->
-                <div class="hub-card" id="hub-card-lantern">
-                    <div class="hub-icon">🏮</div>
-                    <h3>Thả Đèn Trời</h3>
-                    <p>Viết ước mơ và thả đèn lồng bay lên ngân hà bao la</p>
-                    <button class="hub-card-btn">Thả Đèn ❯</button>
-                </div>
-                <!-- Card 5: Chụp Ảnh Polaroid Kỷ Niệm -->
-                <div class="hub-card" id="hub-card-polaroid">
-                    <div class="hub-icon">📸</div>
-                    <h3>Ảnh Polaroid</h3>
-                    <p>Chụp ảnh kỷ niệm 20/10 in tên bạn để tải về máy</p>
-                    <button class="hub-card-btn">Chụp Ảnh ❯</button>
-                </div>
-            </div>
-            <div class="scene-action-row" style="margin-top: 24px; gap: 14px;">
-                <button id="btn-back-to-garden" class="glass-btn">
-                    ❮ Quay Lại Vườn Hoa 3D
-                </button>
-                <button id="btn-replay-journey" class="btn-primary-glow">
-                    ↺ Thưởng Thức Lại Từ Đầu
-                </button>
-            </div>
-        </div>
-    </section>
 
     <!-- ==========================================================================
          MODAL 1: VINTAGE PARCHMENT GREETING LETTER

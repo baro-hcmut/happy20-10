@@ -107,29 +107,31 @@ document.addEventListener('DOMContentLoaded', () => {
     updateVisualizer();
 
     // ==========================================================================
-    // 4. 🎬 SCENE DIRECTOR CONTROLLER (5-SCENE NARRATIVE JOURNEY)
+    // 4. 🎬 AUTOMATIC CINEMATIC STORYTELLING CONTROLLER
     // ==========================================================================
-    let currentScene = 1;
-    const totalScenes = 5;
-    let autoStoryTimer = null;
-    let fallingHeartsInterval = null;
-    let loveBubblesInterval = null;
+    const startScreen = document.getElementById('start-screen');
+    const storyOverlay = document.getElementById('story-overlay');
+    const storyScene1 = document.getElementById('story-scene-1');
+    const storyScene2 = document.getElementById('story-scene-2');
+    const storyScene3 = document.getElementById('story-scene-3');
+    const stageGarden = document.getElementById('stage-garden');
+    const btnSkipStory = document.getElementById('btn-skip-story');
+    const btnReplayStory = document.getElementById('btn-replay-story');
+
+    let storyTimeouts = [];
     let hasFlowerBloomed = false;
+    let isStoryPlaying = false;
 
-    const scenePanes = {
-        1: document.getElementById('scene-1'),
-        2: document.getElementById('scene-2'),
-        3: document.getElementById('scene-3'),
-        4: document.getElementById('stage-garden'),
-        5: document.getElementById('scene-5')
-    };
+    function clearStoryTimeouts() {
+        storyTimeouts.forEach(t => clearTimeout(t));
+        storyTimeouts = [];
+    }
 
-    const timelineSteps = document.querySelectorAll('.timeline-step');
-    const btnPrevScene = document.getElementById('btn-prev-scene');
-    const btnNextScene = document.getElementById('btn-next-scene');
-    const btnAutoStory = document.getElementById('btn-auto-story');
-    const autoStoryIcon = document.getElementById('auto-story-icon');
-    const autoStoryLabel = document.getElementById('auto-story-label');
+    function addStoryTimeout(fn, delay) {
+        const id = setTimeout(fn, delay);
+        storyTimeouts.push(id);
+        return id;
+    }
 
     // --- Audio Unlock Helper ---
     function ensureAudioStarted() {
@@ -139,313 +141,194 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Scene 1: Falling Hearts Generator ---
-    const heartsContainer = document.getElementById('hearts-container');
-    const heartSymbols = ['💖', '💕', '💗', '💓', '🌸', '✨', '💐', '🌹'];
-
-    function spawnFallingHeart() {
-        if (!heartsContainer || currentScene !== 1) return;
-        const heart = document.createElement('div');
-        heart.className = 'falling-heart';
-        heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
-        const left = Math.random() * 94 + 3;
-        const size = 1.0 + Math.random() * 1.5;
-        const duration = 4.0 + Math.random() * 4.0;
-        heart.style.left = `${left}%`;
-        heart.style.fontSize = `${size}rem`;
-        heart.style.animationDuration = `${duration}s`;
-        heartsContainer.appendChild(heart);
-        setTimeout(() => heart.remove(), duration * 1000);
-    }
-
-    function startFallingHearts() {
-        if (fallingHeartsInterval) clearInterval(fallingHeartsInterval);
-        for (let i = 0; i < 7; i++) {
-            setTimeout(spawnFallingHeart, i * 220);
-        }
-        fallingHeartsInterval = setInterval(spawnFallingHeart, 420);
-    }
-
-    function stopFallingHearts() {
-        if (fallingHeartsInterval) {
-            clearInterval(fallingHeartsInterval);
-            fallingHeartsInterval = null;
-        }
-        if (heartsContainer) {
-            heartsContainer.innerHTML = '';
+    // --- Original Falling 3D Tumbling Hearts ---
+    function createOriginalFallingHearts(count = 42) {
+        const container = document.getElementById('hearts-container');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.animationDelay = `${Math.random() * 6}s`;
+            heart.style.animationDuration = `${Math.random() * 5 + 6}s`;
+            const scale = Math.random() * 0.6 + 0.55;
+            heart.style.transform = `scale(${scale})`;
+            container.appendChild(heart);
         }
     }
 
-    // --- Scene 2: Floating Love Bubbles Generator ---
-    const loveBubblesContainer = document.getElementById('love-bubbles-container');
-    const bubbleIcons = ['💖', '🌸', '💌', '✨', '🌹', '💕', '💎'];
-
-    function spawnLoveBubble() {
-        if (!loveBubblesContainer || currentScene !== 2) return;
-        const bubble = document.createElement('div');
-        bubble.className = 'love-bubble';
-        const icon = bubbleIcons[Math.floor(Math.random() * bubbleIcons.length)];
-        bubble.innerHTML = icon;
-        const size = 36 + Math.random() * 32;
-        const left = 5 + Math.random() * 90;
-        const duration = 4.8 + Math.random() * 4.2;
-        bubble.style.width = `${size}px`;
-        bubble.style.height = `${size}px`;
-        bubble.style.left = `${left}%`;
-        bubble.style.animationDuration = `${duration}s`;
-        bubble.style.fontSize = `${size * 0.44}px`;
-        loveBubblesContainer.appendChild(bubble);
-        setTimeout(() => bubble.remove(), duration * 1000);
-    }
-
-    function startLoveBubbles() {
-        if (loveBubblesInterval) clearInterval(loveBubblesInterval);
-        for (let i = 0; i < 6; i++) {
-            setTimeout(spawnLoveBubble, i * 250);
-        }
-        loveBubblesInterval = setInterval(spawnLoveBubble, 520);
-    }
-
-    function stopLoveBubbles() {
-        if (loveBubblesInterval) {
-            clearInterval(loveBubblesInterval);
-            loveBubblesInterval = null;
-        }
-        if (loveBubblesContainer) {
-            loveBubblesContainer.innerHTML = '';
+    // --- Original Meteor Shooting Stars ---
+    function startMeteors() {
+        const meteorContainer = document.getElementById('meteor-container');
+        if (!meteorContainer) return;
+        meteorContainer.innerHTML = '';
+        for (let i = 0; i < 10; i++) {
+            const meteor = document.createElement('div');
+            meteor.className = 'meteor';
+            meteor.style.left = `${Math.random() * 90 + 5}%`;
+            meteor.style.top = `${Math.random() * 220 + 30}px`;
+            meteor.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            meteor.style.animationDelay = `${Math.random() * 4}s`;
+            meteorContainer.appendChild(meteor);
         }
     }
 
-    // --- Core Scene Transition Function ---
-    function goToScene(targetScene, userInitiated = false) {
-        targetScene = Math.max(1, Math.min(totalScenes, targetScene));
+    // Initialize falling hearts & meteors immediately on page load!
+    createOriginalFallingHearts(45);
+    startMeteors();
 
-        // Ensure background audio starts on user action
-        if (userInitiated) {
-            ensureAudioStarted();
-        }
+    // --- Automatic Cinematic Sequence ---
+    function playCinematicSequence() {
+        clearStoryTimeouts();
+        isStoryPlaying = true;
 
-        // Clean up previous scenes
-        stopFallingHearts();
-        stopLoveBubbles();
-        if (particleEngine) {
-            particleEngine.autoFireworksEnabled = false;
-        }
+        // UI Reset
+        if (startScreen) startScreen.classList.add('hidden');
+        if (stageGarden) stageGarden.classList.remove('active');
+        if (storyOverlay) storyOverlay.classList.remove('hidden');
+        if (btnSkipStory) btnSkipStory.classList.remove('hidden');
+        if (btnReplayStory) btnReplayStory.classList.add('hidden');
 
-        // Switch active scene panes
-        Object.keys(scenePanes).forEach(sceneNum => {
-            const pane = scenePanes[sceneNum];
-            if (!pane) return;
-            const num = parseInt(sceneNum);
-            if (num === targetScene) {
-                pane.classList.add('active');
-            } else {
-                pane.classList.remove('active');
+        // Màn 1: Lời Mở Đầu Thi Vị (3.6 giây)
+        if (storyScene1) storyScene1.classList.remove('hidden');
+        if (storyScene2) storyScene2.classList.add('hidden');
+        if (storyScene3) storyScene3.classList.add('hidden');
+        if (particleEngine) particleEngine.autoFireworksEnabled = false;
+
+        // Chuyển sang Màn 2: Món Quà & 20 Bong Bóng Trái Tim (sau 3.6s)
+        addStoryTimeout(() => {
+            if (!isStoryPlaying) return;
+            if (storyScene1) storyScene1.classList.add('hidden');
+            if (storyScene2) {
+                storyScene2.classList.remove('hidden');
+                if (window.soundEngine) window.soundEngine.playSparkle();
             }
-        });
+        }, 3600);
 
-        // Update Timeline Stepper UI
-        timelineSteps.forEach(step => {
-            const stepNum = parseInt(step.dataset.scene);
-            step.classList.toggle('active', stepNum === targetScene);
-        });
+        // Mở Hộp Quà ➔ Chuyển sang Màn 3: Đại Tiệc Pháo Hoa Ngân Hà (sau 7.4s)
+        addStoryTimeout(() => {
+            if (!isStoryPlaying) return;
+            triggerGiftOpening();
+        }, 7600);
 
-        currentScene = targetScene;
-
-        // Perform scene-specific enhancements
-        if (targetScene === 1) {
-            startFallingHearts();
-        } else if (targetScene === 2) {
-            startLoveBubbles();
-            if (window.soundEngine) window.soundEngine.playSparkle();
-        } else if (targetScene === 3) {
-            // Grand Fireworks celebration
-            if (particleEngine) {
-                particleEngine.autoFireworksEnabled = true;
-                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.3, window.innerHeight * 0.25, 350), 200);
-                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.7, window.innerHeight * 0.22, 45), 800);
-                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.5, window.innerHeight * 0.18, 330), 1500);
-                setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.8, window.innerHeight * 0.28, 280), 2200);
-
-                setTimeout(() => particleEngine.releaseSkyLantern(`Chúc ${recipientName} 20/10 Rực Rỡ 💖`), 700);
-                setTimeout(() => particleEngine.releaseSkyLantern("Luôn Xinh Đẹp & Hạnh Phúc ✨"), 1400);
-                setTimeout(() => particleEngine.releaseSkyLantern("Vạn Sự Cát Tường 🌸"), 2100);
-            }
-        } else if (targetScene === 4) {
-            // 3D Rose Garden
-            if (!hasFlowerBloomed && flowerEngine) {
-                flowerEngine.startBloomAnimation();
-                hasFlowerBloomed = true;
-            }
-            showToast("🌹 Chạm vào cánh hoa để đàn Tình Ca hoặc ngắm bướm dạ quang!");
-        } else if (targetScene === 5) {
-            // Memory Hub
-            if (window.soundEngine) window.soundEngine.playCrystalChime();
-        }
-    }
-    window.goToScene = goToScene;
-
-    // --- Setup Timeline Stepper Clicks ---
-    timelineSteps.forEach(step => {
-        step.addEventListener('click', () => {
-            const target = parseInt(step.dataset.scene);
-            goToScene(target, true);
-        });
-    });
-
-    if (btnPrevScene) {
-        btnPrevScene.addEventListener('click', () => {
-            goToScene(currentScene - 1, true);
-        });
+        // Kết thúc Màn 3 ➔ Bước vào Màn 4: Vương Quốc Hoa Hồng 3D (sau 13.6s)
+        addStoryTimeout(() => {
+            if (!isStoryPlaying) return;
+            enterGardenExperience();
+        }, 13600);
     }
 
-    if (btnNextScene) {
-        btnNextScene.addEventListener('click', () => {
-            goToScene(currentScene + 1, true);
-        });
-    }
-
-    // --- Auto Story Play / Pause ---
-    function toggleAutoStory() {
-        if (autoStoryTimer) {
-            clearInterval(autoStoryTimer);
-            autoStoryTimer = null;
-            if (btnAutoStory) btnAutoStory.classList.remove('running');
-            if (autoStoryIcon) autoStoryIcon.textContent = '▶';
-            if (autoStoryLabel) autoStoryLabel.textContent = 'Tự Động';
-            showToast("⏸ Đã tạm dừng trình chiếu tự động");
-        } else {
-            ensureAudioStarted();
-            if (btnAutoStory) btnAutoStory.classList.add('running');
-            if (autoStoryIcon) autoStoryIcon.textContent = '⏸';
-            if (autoStoryLabel) autoStoryLabel.textContent = 'Tạm Dừng';
-            showToast("▶ Bắt đầu trình chiếu tự động 5 cảnh lãng mạn...");
-
-            autoStoryTimer = setInterval(() => {
-                const next = currentScene >= totalScenes ? 1 : currentScene + 1;
-                goToScene(next, false);
-            }, 8500);
-        }
-    }
-
-    if (btnAutoStory) {
-        btnAutoStory.addEventListener('click', toggleAutoStory);
-    }
-
-    // --- Scene 1 CTA ---
-    const btnStartJourney = document.getElementById('btn-start-journey');
-    if (btnStartJourney) {
-        btnStartJourney.addEventListener('click', () => {
-            ensureAudioStarted();
-            if (window.soundEngine) window.soundEngine.playSparkle();
-            goToScene(2, true);
-        });
-    }
-
-    // Clicking anywhere on Scene 1 unlocks audio
-    const scene1 = document.getElementById('scene-1');
-    if (scene1) {
-        scene1.addEventListener('click', (e) => {
-            if (btnStartJourney && (e.target === btnStartJourney || btnStartJourney.contains(e.target))) return;
-            ensureAudioStarted();
-        });
-    }
-
-    // --- Scene 2 Gift Box Opening ---
-    const openGiftBtn = document.getElementById('btn-open-gift');
-    const giftBoxClick = document.getElementById('gift-box-click');
-
-    function performGiftUnbox() {
-        ensureAudioStarted();
+    // --- Hành động mở hộp quà & bắn pháo hoa ---
+    function triggerGiftOpening() {
         if (window.soundEngine) {
             window.soundEngine.playGiftOpen();
         }
         if (window.confetti) {
             window.confetti({
-                particleCount: 120,
+                particleCount: 140,
                 spread: 100,
                 origin: { y: 0.6 },
                 colors: ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd700', '#ffffff', '#e8ba5d']
             });
         }
-        setTimeout(() => {
-            goToScene(3, true);
-        }, 650);
+
+        if (storyScene2) storyScene2.classList.add('hidden');
+        if (storyScene3) storyScene3.classList.remove('hidden');
+
+        // Bắn pháo hoa trái tim và thả đèn trời
+        if (particleEngine) {
+            particleEngine.autoFireworksEnabled = true;
+            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.3, window.innerHeight * 0.25, 350), 300);
+            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.7, window.innerHeight * 0.22, 45), 900);
+            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.5, window.innerHeight * 0.18, 330), 1600);
+            setTimeout(() => particleEngine.launchHeartFirework(window.innerWidth * 0.8, window.innerHeight * 0.28, 280), 2300);
+
+            setTimeout(() => particleEngine.releaseSkyLantern(`Chúc ${recipientName} 20/10 Rực Rỡ 💖`), 600);
+            setTimeout(() => particleEngine.releaseSkyLantern("Luôn Xinh Đẹp & Hạnh Phúc ✨"), 1400);
+            setTimeout(() => particleEngine.releaseSkyLantern("Vạn Sự Cát Tường 🌸"), 2200);
+        }
     }
 
-    if (openGiftBtn) openGiftBtn.addEventListener('click', performGiftUnbox);
-    if (giftBoxClick) giftBoxClick.addEventListener('click', performGiftUnbox);
+    // --- Bước vào Vương Quốc Hoa Hồng 3D ---
+    function enterGardenExperience() {
+        clearStoryTimeouts();
+        isStoryPlaying = false;
 
-    // --- Scene 3 CTA (To 3D Garden) ---
-    const btnGotoGarden = document.getElementById('btn-goto-garden');
-    if (btnGotoGarden) {
-        btnGotoGarden.addEventListener('click', () => {
-            goToScene(4, true);
+        if (particleEngine) particleEngine.autoFireworksEnabled = false;
+        if (storyOverlay) storyOverlay.classList.add('hidden');
+        if (startScreen) startScreen.classList.add('hidden');
+        if (btnSkipStory) btnSkipStory.classList.add('hidden');
+        if (btnReplayStory) btnReplayStory.classList.remove('hidden');
+
+        if (stageGarden) {
+            stageGarden.classList.add('active');
+        }
+
+        if (!hasFlowerBloomed && flowerEngine) {
+            flowerEngine.startBloomAnimation();
+            hasFlowerBloomed = true;
+        }
+
+        showToast("🌹 Chạm vào cánh hoa để gảy khúc tình ca hoặc ngắm bướm dạ quang!");
+    }
+
+    // --- Bắt đầu từ Start Screen ---
+    if (startScreen) {
+        startScreen.addEventListener('click', () => {
+            ensureAudioStarted();
+            playCinematicSequence();
         });
     }
 
-    // --- Scene 4 CTA (From Garden Dock to Hub) ---
-    const btnGotoHub = document.getElementById('btn-goto-hub');
-    if (btnGotoHub) {
-        btnGotoHub.addEventListener('click', () => {
-            goToScene(5, true);
+    if (btnSkipStory) {
+        btnSkipStory.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ensureAudioStarted();
+            enterGardenExperience();
         });
     }
 
-    // --- Scene 5 Hub Actions & Navigation ---
-    const btnBackToGarden = document.getElementById('btn-back-to-garden');
-    if (btnBackToGarden) {
-        btnBackToGarden.addEventListener('click', () => {
-            goToScene(4, true);
+    if (btnReplayStory) {
+        btnReplayStory.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ensureAudioStarted();
+            playCinematicSequence();
+            showToast("↺ Đang thưởng thức lại câu chuyện từ đầu...");
         });
     }
 
-    const btnReplayJourney = document.getElementById('btn-replay-journey');
-    if (btnReplayJourney) {
-        btnReplayJourney.addEventListener('click', () => {
-            goToScene(1, true);
-            showToast("↺ Đã bắt đầu lại hành trình 20/10!");
+    // Hộp quà click ở Cảnh 2 để mở sớm nếu muốn
+    const giftBoxClick = document.getElementById('gift-box-click');
+    if (giftBoxClick) {
+        giftBoxClick.addEventListener('click', () => {
+            if (isStoryPlaying) {
+                clearStoryTimeouts();
+                triggerGiftOpening();
+                addStoryTimeout(enterGardenExperience, 6000);
+            }
         });
     }
 
-    // Scene 5 Hub Cards
-    const hubCardLetter = document.getElementById('hub-card-letter');
-    if (hubCardLetter) {
-        hubCardLetter.addEventListener('click', () => openModal('modal-letter'));
-    }
-
-    const hubCardBottle = document.getElementById('hub-card-bottle');
-    if (hubCardBottle) {
-        hubCardBottle.addEventListener('click', () => {
-            if (window.openWishBottleModal) window.openWishBottleModal();
-            else openModal('modal-wish-bottle');
+    // --- Hiệu ứng Đom đóm bay lượn theo chuột ---
+    const fireflies = document.querySelectorAll('.firefly');
+    window.addEventListener('mousemove', (e) => {
+        fireflies.forEach(firefly => {
+            firefly.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
         });
-    }
+    });
 
-    const hubCardTarot = document.getElementById('hub-card-tarot');
-    if (hubCardTarot) {
-        hubCardTarot.addEventListener('click', () => {
-            openModal('modal-fortune');
-            if (window.initFortuneCards) window.initFortuneCards();
-        });
-    }
-
-    const hubCardLantern = document.getElementById('hub-card-lantern');
-    if (hubCardLantern) {
-        hubCardLantern.addEventListener('click', () => openModal('modal-lantern'));
-    }
-
-    const hubCardPolaroid = document.getElementById('hub-card-polaroid');
-    if (hubCardPolaroid) {
-        hubCardPolaroid.addEventListener('click', () => {
-            if (window.soundEngine) window.soundEngine.playCameraShutter();
-            if (window.generatePolaroidPhoto) window.generatePolaroidPhoto();
-            openModal('modal-polaroid');
-        });
-    }
-
-    // Initialize Scene 1 Falling Hearts on start
-    startFallingHearts();
+    // --- Hiệu ứng Gợn sóng Click Pulse khi click trong vườn ---
+    window.addEventListener('click', (e) => {
+        if (stageGarden && stageGarden.classList.contains('active')) {
+            const pulse = document.createElement('div');
+            pulse.className = 'click-pulse';
+            pulse.style.left = `${e.clientX}px`;
+            pulse.style.top = `${e.clientY}px`;
+            document.body.appendChild(pulse);
+            setTimeout(() => pulse.remove(), 500);
+        }
+    });
 
     // 5. Modal Management
     const modals = document.querySelectorAll('.modal-overlay');

@@ -489,7 +489,7 @@ class SoundEngine {
         });
     }
 
-    // 🎆 SFX: Firework Pop & Shimmer
+    // 🎆 SFX: Firework Pop & Shimmer (Realistic Soft Boom + Golden Sparkles)
     playFireworkBoom() {
         this.init();
         if (this.isMuted) return;
@@ -499,37 +499,39 @@ class SoundEngine {
         const gain = this.ctx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.exponentialRampToValueAtTime(40, now + 0.35);
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.4);
 
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
 
         osc.connect(gain);
         gain.connect(this.sfxGain);
 
         osc.start(now);
-        osc.stop(now + 0.45);
+        osc.stop(now + 0.48);
 
         setTimeout(() => {
             if (!this.ctx || this.isMuted) return;
-            for (let i = 0; i < 4; i++) {
-                const crackleDelay = i * 0.07 + Math.random() * 0.04;
+            const sparklePitches = [1760, 2093, 2637, 3136];
+            sparklePitches.forEach((pFreq, i) => {
+                const cTime = this.ctx.currentTime + i * 0.05 + Math.random() * 0.03;
                 const cOsc = this.ctx.createOscillator();
                 const cGain = this.ctx.createGain();
-                cOsc.type = 'square';
-                cOsc.frequency.setValueAtTime(1200 + Math.random() * 800, this.ctx.currentTime + crackleDelay);
+                cOsc.type = 'sine';
+                cOsc.frequency.setValueAtTime(pFreq, cTime);
 
-                cGain.gain.setValueAtTime(0.02, this.ctx.currentTime + crackleDelay);
-                cGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + crackleDelay + 0.06);
+                cGain.gain.setValueAtTime(0.0001, cTime);
+                cGain.gain.linearRampToValueAtTime(0.035, cTime + 0.01);
+                cGain.gain.exponentialRampToValueAtTime(0.0001, cTime + 0.35);
 
                 cOsc.connect(cGain);
                 cGain.connect(this.sfxGain);
 
-                cOsc.start(this.ctx.currentTime + crackleDelay);
-                cOsc.stop(this.ctx.currentTime + crackleDelay + 0.08);
-            }
-        }, 180);
+                cOsc.start(cTime);
+                cOsc.stop(cTime + 0.38);
+            });
+        }, 160);
     }
 
     // 🎴 SFX: Card Flip / Fortune Draw
