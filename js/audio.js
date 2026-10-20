@@ -1,7 +1,7 @@
 /**
- * 🎵 Magic Web Audio Engine for 20/10 Greeting
- * Synthesizes emotional ambient piano chords, chime sparkles, and fireworks SFX
- * Zero external audio dependency - 100% reliable offline & online!
+ * 🎵 Magic Web Audio Engine - Masterclass Edition
+ * Synthesizes 3 distinct ambient acoustic/piano tracks,
+ * interactive harmonic notes for 3D petal clicks, and custom audio streaming.
  */
 
 class SoundEngine {
@@ -17,20 +17,42 @@ class SoundEngine {
         this.analyser = null;
         this.dataArray = null;
 
-        // Pentatonic / Lyrical chord progression in F Major / D Minor:
-        // Fmaj9 -> Am7 -> Bbmaj9 -> C7sus4 -> Dm9 -> Gm7 -> C9 -> Fadd9
-        this.chords = [
-            [174.61, 261.63, 329.63, 392.00, 440.00], // Fmaj9 (F3, C4, E4, G4, A4)
-            [220.00, 261.63, 329.63, 392.00, 493.88], // Am7/9 (A3, C4, E4, G4, B4)
-            [233.08, 293.66, 349.23, 440.00, 523.25], // Bbmaj9 (Bb3, D4, F4, A4, C5)
-            [261.63, 349.23, 392.00, 466.16, 523.25], // C7sus4 (C4, F4, G4, Bb4, C5)
-            [146.83, 220.00, 293.66, 349.23, 440.00], // Dm9 (D3, A3, D4, F4, A4)
-            [196.00, 293.66, 349.23, 440.00, 523.25], // Gm9 (G3, D4, F4, A4, C5)
-            [261.63, 329.63, 392.00, 466.16, 587.33], // C9 (C4, E4, G4, Bb4, D5)
-            [174.61, 261.63, 329.63, 349.23, 440.00]  // Fadd9 (F3, C4, E4, F4, A4)
+        // Active music track style
+        this.currentTrack = 'piano'; // 'piano', 'musicbox', 'nocturne'
+
+        // Track 1: Romantic Velvet Piano (F Major / D Minor Lyrical Progression)
+        this.pianoChords = [
+            [174.61, 261.63, 329.63, 392.00, 440.00], // Fmaj9
+            [220.00, 261.63, 329.63, 392.00, 493.88], // Am7/9
+            [233.08, 293.66, 349.23, 440.00, 523.25], // Bbmaj9
+            [261.63, 349.23, 392.00, 466.16, 523.25], // C7sus4
+            [146.83, 220.00, 293.66, 349.23, 440.00], // Dm9
+            [196.00, 293.66, 349.23, 440.00, 523.25], // Gm9
+            [261.63, 329.63, 392.00, 466.16, 587.33], // C9
+            [174.61, 261.63, 329.63, 349.23, 440.00]  // Fadd9
         ];
 
-        // Gentle counter-melody notes (Ethereal music box arpeggios)
+        // Track 2: Celeste Music Box (Ethereal Pentatonic Lullaby in C)
+        this.musicboxChords = [
+            [261.63, 329.63, 392.00, 523.25], // C
+            [220.00, 261.63, 329.63, 440.00], // Am
+            [174.61, 261.63, 349.23, 440.00], // F
+            [196.00, 246.94, 293.66, 392.00], // G
+            [220.00, 261.63, 329.63, 523.25], // Am7
+            [174.61, 220.00, 261.63, 349.23], // Fmaj7
+            [196.00, 293.66, 392.00, 493.88], // Gsus4
+            [261.63, 329.63, 392.00, 659.25]  // Cadd9
+        ];
+
+        // Track 3: Nocturne Twilight Ambient (Lush Ambient Drone in D)
+        this.nocturneChords = [
+            [146.83, 220.00, 293.66, 440.00, 554.37], // Dmaj9
+            [164.81, 246.94, 329.63, 392.00, 493.88], // Em9
+            [185.00, 220.00, 277.18, 369.99, 440.00], // F#m7
+            [196.00, 293.66, 369.99, 440.00, 587.33]  // Gmaj9
+        ];
+
+        // Shimmering Glockenspiel notes
         this.melodyNotes = [
             [523.25, 659.25, 783.99],
             [440.00, 523.25, 659.25],
@@ -41,6 +63,9 @@ class SoundEngine {
             [523.25, 587.33, 783.99],
             [659.25, 783.99, 880.00]
         ];
+
+        // Harmonic scale for interactive 3D touches
+        this.harmonicScale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
     }
 
     init() {
@@ -96,6 +121,15 @@ class SoundEngine {
         }
     }
 
+    setTrack(trackKey) {
+        this.currentTrack = trackKey;
+        this.currentChordIndex = 0;
+        if (this.isPlaying) {
+            this.stopMusic();
+            this.startMusic();
+        }
+    }
+
     toggleMute() {
         this.init();
         this.isMuted = !this.isMuted;
@@ -109,27 +143,38 @@ class SoundEngine {
         return this.isMuted;
     }
 
+    getCurrentChordList() {
+        if (this.currentTrack === 'musicbox') return this.musicboxChords;
+        if (this.currentTrack === 'nocturne') return this.nocturneChords;
+        return this.pianoChords;
+    }
+
     scheduleNextChord() {
         if (!this.isPlaying || !this.ctx) return;
 
-        const chord = this.chords[this.currentChordIndex];
-        const melody = this.melodyNotes[this.currentChordIndex];
-        const chordDuration = 3.6; // seconds per chord
+        const chordList = this.getCurrentChordList();
+        const chord = chordList[this.currentChordIndex % chordList.length];
+        const melody = this.melodyNotes[this.currentChordIndex % this.melodyNotes.length];
+        const chordDuration = this.currentTrack === 'nocturne' ? 4.2 : 3.6;
         const now = this.ctx.currentTime;
 
-        // Play each note in the chord with gentle staggered attack (harp / electric piano strum)
+        // Play each note in the chord with gentle staggered attack
         chord.forEach((freq, i) => {
             const noteDelay = i * 0.08 + Math.random() * 0.02;
-            this.playWarmPadNote(freq, now + noteDelay, chordDuration - noteDelay);
+            if (this.currentTrack === 'musicbox') {
+                this.playGlockenspielNote(freq * 1.5, now + noteDelay, 2.5);
+            } else {
+                this.playWarmPadNote(freq, now + noteDelay, chordDuration - noteDelay);
+            }
         });
 
-        // Arpeggiate melody sparkles gently over the bar
+        // Arpeggiate melody sparkles gently
         melody.forEach((freq, idx) => {
             const delay = 0.9 + idx * 0.8 + Math.random() * 0.1;
             this.playGlockenspielNote(freq, now + delay, 1.8);
         });
 
-        this.currentChordIndex = (this.currentChordIndex + 1) % this.chords.length;
+        this.currentChordIndex = (this.currentChordIndex + 1) % chordList.length;
 
         this.chordLoopTimer = setTimeout(() => {
             this.scheduleNextChord();
@@ -156,7 +201,7 @@ class SoundEngine {
         filter.frequency.exponentialRampToValueAtTime(320, startTime + duration);
 
         gainNode.gain.setValueAtTime(0.0001, startTime);
-        gainNode.gain.linearRampToValueAtTime(0.09, startTime + 0.35); // Soft swell
+        gainNode.gain.linearRampToValueAtTime(0.09, startTime + 0.35);
         gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
         osc.connect(filter);
@@ -191,6 +236,37 @@ class SoundEngine {
         osc.stop(startTime + duration);
     }
 
+    // 🌸 Interactive Harmonic Note on 3D Petal Click
+    playHarmonicNote(index = 0) {
+        this.init();
+        if (this.isMuted) return;
+        const now = this.ctx.currentTime;
+        const freq = this.harmonicScale[index % this.harmonicScale.length];
+
+        const osc = this.ctx.createOscillator();
+        const oscHarm = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        oscHarm.type = 'triangle';
+        oscHarm.frequency.setValueAtTime(freq * 2, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+
+        osc.connect(gain);
+        oscHarm.connect(gain);
+        gain.connect(this.sfxGain);
+
+        osc.start(now);
+        oscHarm.start(now);
+        osc.stop(now + 1.25);
+        oscHarm.stop(now + 1.25);
+    }
+
     // ✨ SFX: Magical Fairy Wand Chime / Sparkle
     playSparkle() {
         this.init();
@@ -218,7 +294,7 @@ class SoundEngine {
         });
     }
 
-    // 🎁 SFX: Gift Box Opening / Celestial Chime
+    // 🎁 SFX: Gift Box Opening
     playGiftOpen() {
         this.init();
         if (this.isMuted) return;
@@ -245,13 +321,12 @@ class SoundEngine {
         });
     }
 
-    // 🎆 SFX: Firework Pop & Shimmer Crackle
+    // 🎆 SFX: Firework Pop & Shimmer
     playFireworkBoom() {
         this.init();
         if (this.isMuted) return;
         const now = this.ctx.currentTime;
 
-        // Low boom
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
 
@@ -268,7 +343,6 @@ class SoundEngine {
         osc.start(now);
         osc.stop(now + 0.45);
 
-        // Crackle sparkles
         setTimeout(() => {
             if (!this.ctx || this.isMuted) return;
             for (let i = 0; i < 4; i++) {
@@ -312,7 +386,29 @@ class SoundEngine {
         osc.stop(now + 0.16);
     }
 
-    // Get live audio intensity for visualizer (0.0 to 1.0)
+    // 📸 SFX: Polaroid Camera Shutter Snap
+    playCameraShutter() {
+        this.init();
+        if (this.isMuted) return;
+        const now = this.ctx.currentTime;
+
+        // Click click
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.05);
+
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start(now);
+        osc.stop(now + 0.09);
+    }
+
+    // Visualizer intensity (0.0 to 1.0)
     getAudioLevel() {
         if (!this.analyser || !this.isPlaying || this.isMuted) return 0;
         this.analyser.getByteFrequencyData(this.dataArray);

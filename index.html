@@ -7,7 +7,7 @@
     <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 🌸 Món Quà Kỳ Diệu</title>
     
     <!-- Meta SEO & OpenGraph -->
-    <meta name="description" content="Trải nghiệm chúc mừng ngày 20/10 tương tác 3D diệu kỳ với hoa hồng nhung nở rộ, pháo hoa trái tim, đèn trời và quẻ may mắn.">
+    <meta name="description" content="Trải nghiệm chúc mừng ngày 20/10 tương tác 3D diệu kỳ với hoa hồng nhung nở rộ, pháo hoa trái tim, đèn trời, studio ảnh polaroid và quẻ may mắn.">
     <meta property="og:title" content="Món Quà 20/10 Dành Tặng Người Phụ Nữ Tuyệt Vời 🌸">
     <meta property="og:description" content="Một món quà đặc biệt và kỳ diệu dành riêng cho ngày Phụ nữ Việt Nam 20/10.">
     <meta property="og:type" content="website">
@@ -17,7 +17,7 @@
 </head>
 <body>
 
-    <!-- 🌌 Layer 1: Background Stars, Meteors, Fireflies, Petals & Fireworks Canvas -->
+    <!-- 🌌 Layer 1: Background Stars, Cosmic Nebula, Meteors, Petals & Fireworks Canvas -->
     <canvas id="particles-canvas"></canvas>
 
     <!-- 🌹 Layer 2: Three.js 3D Blooming Rose Container -->
@@ -25,6 +25,13 @@
 
     <!-- 🎬 Layer 3: Cinematic Vignette Shadow Frame -->
     <div class="cinematic-vignette"></div>
+
+    <!-- 🎬 Cinematic Director Letterbox Bars & Subtitles -->
+    <div class="cinematic-bars top-bar"></div>
+    <div class="cinematic-bars bottom-bar"></div>
+    <div id="cinematic-subtitles" class="cinematic-subtitles">
+        <span id="subtitle-text">"Mỗi đóa hoa nở rộ là một lời chúc dịu dàng gửi đến bạn..."</span>
+    </div>
 
     <!-- ==========================================================================
          STAGE 1: INTRO CEREMONY (GIFT BOX PRESENTATION)
@@ -91,37 +98,74 @@
                 </span>
             </div>
 
-            <!-- Top Actions: Music with Equalizer & Fullscreen -->
+            <!-- Top Actions: Music with Equalizer & Track Selector -->
             <div class="top-actions">
-                <button id="btn-toggle-music" class="glass-btn" title="Bật/Tắt Nhạc Nền">
-                    <span id="music-icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                        </svg>
-                    </span>
-                    <div class="audio-visualizer">
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
-                        <div class="visualizer-bar"></div>
-                    </div>
-                </button>
+                <div class="music-control-group">
+                    <button id="btn-toggle-music" class="glass-btn" title="Bật/Tắt Nhạc Nền">
+                        <span id="music-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                            </svg>
+                        </span>
+                        <div class="audio-visualizer">
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                            <div class="visualizer-bar"></div>
+                        </div>
+                    </button>
+
+                    <button id="btn-music-menu" class="glass-btn icon-only" title="Chọn Giai Điệu">
+                        🎵
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- 3D Orbit Interaction Hint -->
-        <div class="orbit-hint">
-            <span>✨ Xoay 360° để ngắm hoa • Chạm vào hoa để nhận phép màu</span>
+        <!-- Music Track Selection Popover -->
+        <div id="music-popover" class="music-popover">
+            <button class="track-btn active" data-track="piano">
+                <span>🎹</span>
+                <span>Dương Cầm Lãng Mạn</span>
+            </button>
+            <button class="track-btn" data-track="musicbox">
+                <span>🎠</span>
+                <span>Hộp Nhạc Thần Tiên</span>
+            </button>
+            <button class="track-btn" data-track="nocturne">
+                <span>🌌</span>
+                <span>Khúc Du Ca Đêm Sao</span>
+            </button>
         </div>
 
-        <!-- Floating Bottom Dock Controls -->
+        <!-- 3D Orbit Interaction Hint -->
+        <div class="orbit-hint">
+            <span>✨ Xoay 360° • Chạm cánh hoa nghe hợp âm dương cầm & tỏa bụi tiên</span>
+        </div>
+
+        <!-- Floating Bottom Dock Controls (Masterclass Suite) -->
         <nav class="garden-bottom-dock" aria-label="Điều khiển tương tác">
-            <button id="btn-open-letter" class="dock-item" title="Đọc thư chúc mừng">
+            <button id="btn-toggle-bouquet" class="dock-item" title="Chuyển đổi Đóa Hồng Đơn / Bó Hoa 7 Bông">
+                <span class="dock-icon">💐</span>
+                <span id="bouquet-btn-label">Bó Hoa</span>
+            </button>
+
+            <button id="btn-cinematic-mode" class="dock-item" title="Bật chế độ xem điện ảnh tự động">
+                <span class="dock-icon">🎬</span>
+                <span>Điện Ảnh</span>
+            </button>
+
+            <button id="btn-open-polaroid" class="dock-item" title="Chụp ảnh Polaroid kỷ niệm 20/10">
+                <span class="dock-icon">📸</span>
+                <span>Chụp Ảnh</span>
+            </button>
+
+            <button id="btn-open-letter" class="dock-item" title="Đọc thư chúc mừng niêm phong sáp">
                 <span class="dock-icon">💌</span>
                 <span>Thư Chúc</span>
             </button>
 
-            <button id="btn-open-fortune" class="dock-item" title="Rút quẻ may mắn 20/10">
+            <button id="btn-open-fortune" class="dock-item" title="Rút quẻ may mắn 20/10 Holographic">
                 <span class="dock-icon">🎴</span>
                 <span>Rút Quẻ</span>
             </button>
@@ -222,9 +266,7 @@
                 <p>Chạm vào một lá bài bất kỳ để nhận quẻ may mắn dành riêng cho bạn hôm nay ✨</p>
             </div>
 
-            <div id="fortune-cards-grid" class="fortune-cards-grid">
-                <!-- Dynamically populated cards with 3D flip -->
-            </div>
+            <div id="fortune-cards-grid" class="fortune-cards-grid"></div>
 
             <button class="btn-action-primary" onclick="initFortuneCards()">
                 🔄 Xáo Lại Bài & Rút Lượt Mới
@@ -262,7 +304,32 @@
     </div>
 
     <!-- ==========================================================================
-         MODAL 4: PERSONALIZE RECIPIENT NAME
+         MODAL 4: POLAROID PHOTO MEMORY STUDIO
+         ========================================================================== -->
+    <div id="modal-polaroid" class="modal-overlay">
+        <div class="modal-card polaroid-modal-card">
+            <button class="btn-close-modal" aria-label="Đóng chụp ảnh">✕</button>
+
+            <div class="fortune-header">
+                <h3>📸 Ảnh Kỷ Niệm Polaroid 20/10</h3>
+                <p>Bức ảnh được chụp trực tiếp từ góc nhìn 3D hiện tại của bạn ✨</p>
+            </div>
+
+            <!-- Polaroid Photo Preview Container -->
+            <div class="polaroid-frame-wrapper">
+                <canvas id="polaroid-canvas"></canvas>
+            </div>
+
+            <div class="polaroid-actions">
+                <button id="btn-download-polaroid" class="btn-action-primary">
+                    💾 Tải Ảnh Về Máy (Lưu Kỷ Niệm)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MODAL 5: PERSONALIZE RECIPIENT NAME
          ========================================================================== -->
     <div id="modal-personalize" class="modal-overlay">
         <div class="modal-card">
@@ -284,7 +351,7 @@
     </div>
 
     <!-- ==========================================================================
-         SCRIPTS: Local with CDN Fallbacks for Maximum Reliability
+         SCRIPTS
          ========================================================================== -->
     <script src="lib/three.min.js"></script>
     <script>
